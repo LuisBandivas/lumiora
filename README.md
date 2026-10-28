@@ -1,32 +1,48 @@
 # Lumiora
 
-**Capture moments. Create memories.**
+**Capture moments. Make them yours.**
 
-Lumiora is a modern, Korean-inspired web-based photo booth application designed to make capturing and personalizing memories fun, simple, and accessible.
+Lumiora is a modern, web-based photo booth application that allows users to capture, customize, and share their favorite moments directly from their browser.
 
-With Lumiora, users can take photos directly from their browser, customize photo strips using filters, frames, and stickers, and download or share their creations—all without installing additional software.
+Designed with a clean, minimal, and intuitive interface, Lumiora provides a flexible creative experience where users can personalize their photos according to their unique style.
 
-## Overview
+Whether it's a simple monochrome photo strip, a cute pastel-themed design, or a nostalgic vintage look, Lumiora gives users the freedom to express themselves through customizable layouts, filters, frames, stickers, and other creative tools.
 
-Lumiora aims to bring the charm of Korean-style photo booths into a digital experience. Featuring a clean interface, soft pastel aesthetics, and creative customization tools, the application allows users to create personalized photo strips anytime and anywhere.
+## Design Philosophy
 
-The application is designed to be responsive, user-friendly, and accessible across desktop and mobile devices.
+Lumiora follows three core design principles:
+
+**Minimal by Design**
+
+A modern, light-themed interface with clean typography, structured layouts, subtle details, and distraction-free navigation.
+
+**Creative by Choice**
+
+Users are free to personalize their photos using different styles, colors, effects, and decorations without being limited to a single aesthetic.
+
+**Simple by Experience**
+
+An accessible and intuitive photo booth experience that makes capturing, editing, downloading, and sharing photos effortless across devices.
 
 ## Features
 
 ### Photo Booth
+- Category browsing and template previews
 - Live camera preview
 - Automatic photo capture with countdown
 - Multiple photo strip layouts
+- Single-photo and framed compositions
 - Photo retake functionality
 - Front and rear camera support on compatible devices
 
 ### Photo Customization
-- Aesthetic photo filters
+- Photo filters in varied styles
 - Customizable photo strip frames and backgrounds
 - Stickers and decorative elements
 - Personalized text and captions
 - Real-time editing preview
+
+Local upload of existing photos is proposed; its first-release scope is still open.
 
 ### Gallery and Sharing
 - Download photo strips as images
@@ -36,8 +52,8 @@ The application is designed to be responsive, user-friendly, and accessible acro
 - Optional user accounts for cloud storage
 
 ### User Experience
-- Korean-inspired minimalist interface
-- Soft pastel color palette
+- Minimal, light-themed interface
+- Flexible creative styles for photo output
 - Responsive design for desktop and mobile
 - Simple and intuitive navigation
 - Browser-based experience with no installation required
@@ -46,65 +62,58 @@ The application is designed to be responsive, user-friendly, and accessible acro
 
 ## Technology Stack
 
-The following technologies are currently planned for development.
+The starter in `core/frontend` currently uses React, TypeScript, Vite, and Tailwind CSS. The other technologies below are possible later choices, not integrated parts of the app.
 
-| Technology | Purpose |
+| Technology | Current status or possible use |
 |---|---|
-| React | Frontend development |
-| TypeScript | Type-safe application development |
-| Vite | Development and build tooling |
-| Tailwind CSS | UI styling |
-| HTML Canvas API | Photo processing and exporting |
-| MediaDevices API | Camera access |
-| Zustand | State management |
-| Supabase | Authentication, database, and storage |
-| Vercel | Deployment and hosting |
-| Figma | UI/UX design and prototyping |
+| React, TypeScript, Vite, Tailwind CSS | Installed frontend starter |
+| HTML Canvas API, MediaDevices API | Proposed browser capture and export |
+| Zustand | Possible state management if needed |
+| Supabase | Possible later authentication, database, and storage |
+| Vercel | Possible deployment and hosting |
+| Figma | Possible UI/UX design and prototyping |
 
 The technology stack may change as development progresses.
 
 ## How It Works
 
-Lumiora follows a simple photo booth workflow:
+The proposed photo booth workflow is:
 
-1. **Start** — Open Lumiora and begin a photo booth session.
-2. **Choose Layout** — Select a preferred photo strip arrangement.
-3. **Capture** — Take photos using the device camera with a countdown timer.
-4. **Customize** — Apply filters, select frames, and add stickers or text.
-5. **Preview** — Review the completed photo strip.
-6. **Save or Share** — Download the final image, save it to a personal gallery, or share it with others.
+1. **Choose look** — Browse categories and select a starting template on one screen.
+2. **Capture or upload** — Fill the template's photo slots. Local upload is still a scope decision for the first release.
+3. **Customize** — Change supported colors, filters, frames, stickers, or text.
+4. **Review** — Check the completed result.
+5. **Export** — Download the final image locally. Gallery and sharing are later possibilities.
 
 ## Project Structure
 
-The proposed project structure is:
+The current top-level structure is:
 
 ```text
 lumiora/
-├── public/                 # Static assets
-├── src/
-│   ├── assets/             # Images, icons, and fonts
-│   ├── components/         # Reusable UI components
-│   ├── features/           # Feature-specific modules
-│   ├── hooks/              # Custom React hooks
-│   ├── layouts/            # Shared page layouts
-│   ├── pages/              # Application pages
-│   ├── services/           # External services and APIs
-│   ├── store/              # Application state
-│   ├── styles/             # Global styles
-│   ├── types/              # TypeScript definitions
-│   ├── App.tsx             # Root application component
-│   └── main.tsx            # Application entry point
-├── supabase/               # Backend configuration
-├── package.json
-├── README.md
-└── vite.config.ts
+├── core/
+│   ├── frontend/           # Vite/React starter and package.json
+│   └── backend/            # Reserved for a possible backend
+├── docs/                   # Working planning documents
+├── supabase/               # Reserved for possible service configuration
+├── test/                   # Reserved for testing assets
+├── AGENTS.md               # Guidance for AI coding agents
+└── README.md
 ```
 
-*This structure is provisional and will be updated during development.*
+The frontend's suggested internal structure is described in [Frontend](docs/FRONTEND.md).
 
 ## Getting Started
 
-Local development instructions will be added once the project setup is finalized.
+The frontend starter can already be run locally:
+
+```sh
+cd core/frontend
+npm ci
+npm run dev
+```
+
+See [the frontend README](core/frontend/README.md) for checks and [planning documents](docs/README.md) for the working product and implementation direction.
 
 Planned requirements include:
 
@@ -125,11 +134,11 @@ Camera access requires user permission and a secure browser context, such as HTT
 - [ ] Build interactive prototypes
 
 ### Phase 2 — Core Development
-- [ ] Initialize frontend project
+- [x] Initialize frontend project starter
 - [ ] Implement application navigation
 - [ ] Integrate camera functionality
 - [ ] Build countdown and photo capture system
-- [ ] Implement photo strip layouts
+- [ ] Implement template selection and image-slot layouts
 
 ### Phase 3 — Customization
 - [ ] Add photo filters
@@ -162,9 +171,9 @@ Planned privacy measures include secure photo storage, controlled gallery access
 
 ## Project Status
 
-**Status:** Planning & Design
+**Planning & UI/UX Design**
 
-Lumiora is currently under development. Features, implementation details, and documentation are subject to change.
+Lumiora is currently in the design and planning phase. Features, technologies, and implementation details may evolve throughout development.
 
 ## Contributing
 

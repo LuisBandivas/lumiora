@@ -1,0 +1,56 @@
+# Architecture
+
+**Status: working draft.** Keep the first complete journey in the browser. Add remote services only when a feature requires them.
+
+## Current repository
+
+- `core/frontend` contains a Vite, React, TypeScript, and Tailwind starter. The UI is currently a placeholder.
+- `core/backend`, `supabase`, and `test` are present as empty planning directories.
+- Supabase and Vercel appear in the root README as planned technologies; neither is an integrated service here.
+
+## Proposed first-release boundary
+
+```mermaid
+flowchart LR
+  Person --> UI[React UI]
+  UI --> Templates[Template catalog]
+  Templates --> Session[Session state]
+  UI --> Session
+  UI --> Camera[MediaDevices adapter]
+  Camera --> Session
+  UI --> Upload[Local file input, proposed]
+  Upload --> Session
+  Session --> Renderer[Composition renderer]
+  Renderer --> Download[Browser download]
+```
+
+The browser owns the template selection, camera stream, any locally uploaded images, edits, rendering, and download. A session model tracks the selected template, captured or uploaded slots, and edit choices. Treat raw images as short-lived data; release camera tracks and object URLs when no longer needed. The upload path is proposed and still needs a release-scope decision.
+
+## Boundaries
+
+| Boundary | Responsibility | Guideline |
+| --- | --- | --- |
+| UI | Screens, controls, feedback, navigation | Present state and invoke actions; keep browser API details elsewhere. |
+| Template catalog | Categories, stable IDs, slot count and geometry, default appearance | Supply a starting point independent from a person's later edits. |
+| Session model | Valid steps and photo/edit data | Make invalid transitions visible and testable. |
+| Camera adapter | Permission, stream lifecycle, device errors, capture | Isolate `MediaDevices` calls for focused tests and recovery. |
+| Local file input | Validate and decode chosen images | Fill the same image slots as camera captures if upload is included. |
+| Composition renderer | Combine images, template geometry, frame, effects, and text into pixels | Use the same input model for preview and export to reduce surprises. |
+| Persistence/sharing | Future accounts, storage, and links | Introduce only after retention, access, and deletion rules are decided. |
+
+## Data and privacy
+
+The first release should process photos locally. Camera permission is browser-controlled and requested only at the capture step. Download is an explicit action. A shareable selection URL may contain only public category and template IDs, never image data. If a later feature sends an image to a server, the UI must make that action clear and the architecture must define who can access it, how long it stays, and how it is deleted.
+
+Do not put service credentials in client code. Public client configuration, if later needed, belongs in environment variables with a checked-in example file; secrets belong in the service environment.
+
+## Future service boundary
+
+An optional account/gallery/sharing phase may add authentication, database metadata, and image storage. Keep the client-facing operations explicit, such as `saveStrip`, `listStrips`, and `deleteStrip`, so the browser-only flow does not depend on cloud availability. Storage permissions and share-link lifetime need a separate decision before implementation.
+
+## Open decisions
+
+- Whether the project needs a custom backend or only managed services for later features.
+- Image representation during editing and maximum in-memory image size.
+- Whether local draft persistence is useful, and its privacy implications.
+- Cloud image retention, access control, link expiry, and deletion semantics.
