@@ -75,7 +75,7 @@ Create actual color, type, spacing, radius, and focus tokens after the first wir
 - Whether the five-step indicator includes a separate landing page or begins on Choose look; the current proposal and the shell begin on Choose look. RollBooth uses a landing page with a mode picker; Lumiora has not adopted one.
 - Whether Surprise me selects within the current category or all templates.
 - Whether capture is automatic after countdown or initiated for each slot. The shell starts the countdown for each photo on request and moves to the next empty slot afterward.
-- How much editing fits on a phone without obscuring the strip preview.
+- How much editing fits on a phone without obscuring the strip preview. In the current Customize screen on a 390 px phone, the selected sticker's size, rotation and color controls sit below the preview, so the preview scrolls out of view while adjusting them. This is unresolved.
 
 ## Next design deliverable
 

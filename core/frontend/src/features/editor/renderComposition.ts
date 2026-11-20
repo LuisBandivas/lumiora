@@ -1,5 +1,6 @@
 import type { Template } from '../templates/catalog'
-import { gridOf } from '../templates/layout'
+import { compositionGeometry } from '../templates/layout'
+import { PLACEHOLDER_ALPHA } from './presets'
 import { findSticker, type OverlayItem } from './overlays'
 import { resolveEdits, type EditSettings } from './useEditSettings'
 
@@ -76,7 +77,6 @@ export async function renderComposition(
 
   const width = EXPORT_WIDTH
   const height = exportHeight(template)
-  const unit = width / 100
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
@@ -88,14 +88,8 @@ export async function renderComposition(
 
   // Same arithmetic as the CSS grid in CompositionPreview.
   const { layout } = template
-  const padding = layout.padding * unit
-  const gap = layout.gap * unit
-  const captionHeight = layout.captionHeight * unit
-  const { columns, rows } = gridOf(template.columns, template.photoCount)
-  const gridWidth = width - 2 * padding
-  const gridHeight = height - 2 * padding - gap - captionHeight
-  const cellWidth = (gridWidth - gap * (columns - 1)) / columns
-  const cellHeight = (gridHeight - gap * (rows - 1)) / rows
+  const { unit, padding, gap, captionHeight, columns, gridWidth, cellWidth, cellHeight } =
+    compositionGeometry(template, width, height)
   const fontFamily = getComputedStyle(document.body).fontFamily
 
   const images = await Promise.all(slots.map((url) => (url ? loadImage(url) : null)))
@@ -104,8 +98,10 @@ export async function renderComposition(
     const y = padding + Math.floor(i / columns) * (cellHeight + gap)
     if (!image) {
       context.filter = 'none'
-      context.fillStyle = 'rgba(0, 0, 0, 0.1)'
+      context.globalAlpha = PLACEHOLDER_ALPHA
+      context.fillStyle = frame.ink
       context.fillRect(x, y, cellWidth, cellHeight)
+      context.globalAlpha = 1
       return
     }
     // Equivalent of object-fit: cover.

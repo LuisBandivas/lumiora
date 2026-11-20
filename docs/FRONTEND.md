@@ -4,7 +4,7 @@
 
 ## Current setup
 
-The app lives in `core/frontend`. `package.json` provides `dev`, `build`, `lint`, and `preview` scripts. Vite uses React and Tailwind plugins. No router, global state library, camera integration, or test runner is installed yet. `motion` is installed for transitions and, later, the countdown. The shell uses it for step transitions (`AnimatePresence` in `App.tsx`), the progress bar fill, the template preview swap and button press feedback. `App.tsx` wraps everything in `MotionConfig reducedMotion="user"`, so keep new animations under it.
+The app lives in `core/frontend`. `package.json` provides `dev`, `build`, `lint`, `test`, and `preview` scripts. Vite uses React and Tailwind plugins, and Vitest runs the unit tests. No router or global state library is installed. `motion` is installed for transitions and the capture countdown. The app uses it for step transitions (`AnimatePresence` in `App.tsx`), the progress bar fill, the template preview swap and button press feedback. `App.tsx` wraps everything in `MotionConfig reducedMotion="user"`, so keep new animations under it.
 
 ### UI shell (implemented)
 
@@ -37,6 +37,7 @@ The shell follows the [UI](UI.md) journey. It starts on Choose look, has no land
   - `CompositionPreview.tsx` renders template geometry, photos, frame, filter and caption at the export aspect ratio, sized with container units so it scales without changing the ratio. A caption band is always reserved. It shows an alert if a photo fails to load. Review and Export should reuse it.
   - `CustomizeScreen.tsx` pairs the preview with controls built from `components/ui/ChoiceGroup.tsx` (native radio inputs) and a caption field, plus **Reset edits**.
 - Create Your Own is five fixed blank templates (1, 2, 3, 4 and 6 photos). Surprise me is not built.
+- Layout gotchas found in browser testing: `main` uses `overflow-x-clip` because `overflow-x-hidden` makes it a scroll container and stops the sticky bottom bars from sticking. Empty photo slots are tinted from the frame's ink color (`placeholderBackground` in `presets.ts`) because a fixed dark tint is invisible on dark frames such as Film noir.
 - Known limit: the text position in the export can differ from the preview by a pixel or two, because the browser and the canvas place text lines slightly differently.
 
 ## Suggested structure as features arrive
@@ -88,4 +89,4 @@ Use Vite client environment variables only for values safe to expose in a built 
 - The behavior when someone changes to a template with a different slot count after adding photos. The current code keeps photos separately for each template; a migration between templates is not built.
 - Session state mechanism and whether drafts survive refresh.
 - Preview rendering strategy and its performance on lower-powered phones.
-- Test runner and browser automation tools when the first testable feature is added.
+- Browser automation tools for the camera, drag, export and responsive checks. The unit test runner is settled (Vitest).

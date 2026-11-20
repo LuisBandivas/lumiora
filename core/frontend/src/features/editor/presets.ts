@@ -16,6 +16,13 @@ export interface FilterPreset {
   css: string
 }
 
+/** Strength of the empty-slot tint, used by previews (CSS) and the export (canvas alpha). */
+export const PLACEHOLDER_ALPHA = 0.12
+
+/** A tint of the frame's own ink, so empty slots stay visible on both light and dark frames. */
+export const placeholderBackground = (frame: FramePreset) =>
+  `color-mix(in srgb, ${frame.ink} ${PLACEHOLDER_ALPHA * 100}%, transparent)`
+
 export const framePresets: FramePreset[] = [
   { id: 'white', label: 'White', background: '#ffffff', ink: '#16161a' },
   { id: 'black', label: 'Black', background: '#111114', ink: '#f6f6f4' },

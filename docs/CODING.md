@@ -25,7 +25,7 @@ For AI-assisted work, give the agent a concrete outcome, relevant files or docs,
 
 Use test-first development when behavior can be specified before UI implementation: session transitions, template selection and URL validation, slot geometry, retake logic, and export composition are good candidates. Start with a failing behavior test, implement it, then refactor. For exploratory visual work, build a small slice, inspect it in the browser, and add focused tests around stable behavior afterward.
 
-Choose and configure a test runner when the first meaningful automated test is added. Favor tests of behavior and visible outcomes over tests that repeat the code's internal structure. Browser and device checks are needed for permission handling, responsive layout, and download behavior; unit tests alone cannot cover those browser interactions.
+Vitest is the unit test runner (node environment, `src/**/*.test.ts`). Pull logic that can be tested out of components into pure functions, as with `resolveSelection`, `placePhotos` and `compositionGeometry`, and test those. Favor tests of behavior and visible outcomes over tests that repeat the code's internal structure. Browser and device checks are needed for permission handling, responsive layout, and download behavior; unit tests alone cannot cover those browser interactions.
 
 ## Available checks today
 
@@ -34,9 +34,12 @@ Run from `core/frontend`:
 ```text
 npm run lint
 npm run build
+npm test
 ```
 
-`npm run build` includes TypeScript checking. There is no `test` script yet. After adding tests, document the command here and in the frontend package scripts. Report any check that could not run and why.
+`npm run build` includes TypeScript checking. `npm test` runs 27 unit tests covering the template catalog and its geometry, selection URL validation, photo slot placement and the edit and overlay data. Report any check that could not run and why.
+
+There is no automated browser test in the repository. The camera, upload, drag, export and responsive behavior were checked once by hand-driving Edge with Playwright and a fake camera (26 steps across the whole journey on desktop and a 390 px phone, including a real PNG download compared with the preview). That script is not committed. Adding browser automation to the project is still **Open**; until then, repeat that pass in a real browser after changes to capture, the editor or export.
 
 ## Change review
 

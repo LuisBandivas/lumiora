@@ -1,4 +1,4 @@
-import { framePresets } from '../editor/presets'
+import { framePresets, placeholderBackground } from '../editor/presets'
 import type { Template } from '../templates/catalog'
 import { gridOf } from '../templates/layout'
 import type { PhotoSession } from './usePhotoSession'
@@ -47,9 +47,10 @@ export function SlotStrip({ template, session }: Props) {
                   aria-pressed={selected}
                   aria-label={`Photo ${i + 1}, ${url ? 'filled' : 'empty'}${selected ? ', selected' : ''}`}
                   onClick={() => session.select(i)}
-                  className={`grid size-full place-items-center overflow-hidden bg-black/10 text-sm text-muted ring-2 ${
+                  className={`grid size-full place-items-center overflow-hidden text-sm ring-2 ${
                     selected ? 'ring-accent' : 'ring-transparent'
                   }`}
+                  style={{ background: placeholderBackground(frame), color: frame.ink }}
                 >
                   {url ? <img src={url} alt="" className="size-full object-cover" /> : <span>{i + 1}</span>}
                 </button>

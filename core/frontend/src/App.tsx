@@ -27,7 +27,8 @@ function App() {
       <div className="flex min-h-screen flex-col">
         <AppHeader onHome={() => setStep('select')} />
         <StepIndicator current={step} onNavigate={setStep} />
-        <main className="flex flex-1 flex-col overflow-x-hidden">
+        {/* overflow-x-clip, not hidden: hidden makes main a scroll container and breaks sticky bars. */}
+        <main className="flex flex-1 flex-col overflow-x-clip">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={step}

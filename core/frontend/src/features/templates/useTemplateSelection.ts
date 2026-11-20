@@ -8,16 +8,18 @@ import {
   type Template,
 } from './catalog'
 
-interface Selection {
+export interface Selection {
   category: CategoryId
   template: Template
   /** Set when the URL named an unknown category or template and a valid choice replaced it. */
   notice: string | null
 }
 
-// Reads the public selection from the query string and falls back to a valid choice.
-function readSelection(): Selection {
-  const params = new URLSearchParams(window.location.search)
+const readSelection = () => resolveSelection(window.location.search)
+
+/** Reads the public selection from a query string and falls back to a valid choice. */
+export function resolveSelection(search: string): Selection {
+  const params = new URLSearchParams(search)
   const rawCategory = params.get('category')
   const rawTemplate = params.get('template')
 

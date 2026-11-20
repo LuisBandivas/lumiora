@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { gridOf } from '../templates/layout'
 import type { Template } from '../templates/catalog'
 import { OverlayLayer, type OverlayControls } from './OverlayLayer'
+import { placeholderBackground } from './presets'
 import { resolveEdits, type EditSettings } from './useEditSettings'
 
 interface Props {
@@ -58,7 +59,7 @@ export function CompositionPreview({
             }}
           >
             {slots.map((url, i) => (
-              <div key={i} className="min-h-0 overflow-hidden bg-black/10">
+              <div key={i} className="min-h-0 overflow-hidden" style={{ background: placeholderBackground(frame) }}>
                 {url && (
                   <img
                     src={url}
