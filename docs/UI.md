@@ -1,6 +1,6 @@
 # UI and interaction direction
 
-**Status: proposed.** The current app is a single placeholder screen. The [design philosophy](../README.md#design-philosophy) sets a modern, sharp, light-themed interface and leaves the style of each person's photo output open to creative choice. [RollBooth's selection page](https://rollbooth.com/layout?tab=frames) is a reference for category-led browsing and a clear next action; Lumiora's visual language and assets should be its own.
+**Status: proposed.** The current app is a UI shell: header, five-step progress bar, a working Choose look screen with placeholder templates, and placeholder screens for the remaining steps (see [Frontend](FRONTEND.md#ui-shell-implemented)). The [design philosophy](../README.md#design-philosophy) sets a modern, sharp, light-themed interface and leaves the style of each person's photo output open to creative choice. [RollBooth's selection page](https://rollbooth.com/layout?tab=frames) is a reference for category-led browsing and a clear next action; Lumiora's visual language and assets should be its own.
 
 ## Main journey
 
@@ -56,7 +56,7 @@ The proposed URL is `/create?category=frames&template=minimal-white`. It identif
 - Consistent spacing and type scale, with readable labels before decorative typography.
 - Motion can make the countdown and screen changes feel playful; respect reduced motion settings.
 
-Create actual color, type, spacing, radius, and focus tokens after the first wireframes are reviewed. Record chosen tokens in the frontend styles rather than treating examples in this draft as fixed values.
+Create actual color, type, spacing, radius, and focus tokens after the first wireframes are reviewed. Record chosen tokens in the frontend styles rather than treating examples in this draft as fixed values. The shell's first-pass tokens in `core/frontend/src/index.css` are provisional.
 
 ## Accessibility review for every screen
 
@@ -72,9 +72,9 @@ Create actual color, type, spacing, radius, and focus tokens after the first wir
 - Brand mark, exact UI colors, fonts, illustrations, and icon style.
 - Initial photo style presets and how users can mix their elements.
 - Which templates appear in the first release and how each preview is shown.
-- Whether the five-step indicator includes a separate landing page or begins on Choose look; the current proposal begins on Choose look.
+- Whether the five-step indicator includes a separate landing page or begins on Choose look; the current proposal and the shell begin on Choose look. RollBooth uses a landing page with a mode picker; Lumiora has not adopted one.
 - Whether Surprise me selects within the current category or all templates.
-- Whether capture is automatic after countdown or initiated for each slot.
+- Whether capture is automatic after countdown or initiated for each slot. The shell starts the countdown for each photo on request and moves to the next empty slot afterward.
 - How much editing fits on a phone without obscuring the strip preview.
 
 ## Next design deliverable

@@ -4,7 +4,24 @@
 
 ## Current setup
 
-The app lives in `core/frontend`. `package.json` provides `dev`, `build`, `lint`, and `preview` scripts. Vite uses React and Tailwind plugins. No router, global state library, camera integration, or test runner is installed yet.
+The app lives in `core/frontend`. `package.json` provides `dev`, `build`, `lint`, and `preview` scripts. Vite uses React and Tailwind plugins. No router, global state library, camera integration, or test runner is installed yet. `motion` is installed for transitions and, later, the countdown. The shell uses it for step transitions (`AnimatePresence` in `App.tsx`), the progress bar fill, the template preview swap and button press feedback. `App.tsx` wraps everything in `MotionConfig reducedMotion="user"`, so keep new animations under it.
+
+### UI shell (implemented)
+
+The shell follows the [UI](UI.md) journey. It starts on Choose look, has no landing page, and uses no router.
+
+- `src/App.tsx` holds the journey step (`select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes.
+- `src/app/journey.ts` defines the five steps. `components/layout/` holds `AppHeader`, `StepIndicator` (earlier steps are clickable, later ones disabled) and `AppFooter`.
+- `features/templates/` holds the placeholder catalog (`catalog.ts`), the selection hook that reads and writes `/create?category=…&template=…` with `history.replaceState` and validates IDs with a fallback notice (`useTemplateSelection.ts`), the placeholder preview (`TemplatePreview.tsx`) and the Choose look screen (`ChooseLook.tsx`).
+- `pages/StepPlaceholder.tsx` stands in for Capture or upload, Customize, Review and Export until those features are built.
+- Application UI tokens (colors, font, radius, focus ring, reduced motion) are in `src/index.css`. They are a first pass pending wireframe review.
+- `features/camera/` implements Capture or upload:
+  - `usePhotoSession.ts` keeps image slots per template ID as object URLs, with an active slot. Switching template neither loses photos nor mismatches slot counts. Slots are not persisted, so a refresh clears them.
+  - `useCamera.ts` has the states `idle`, `requesting`, `ready`, `denied`, `unavailable` and `error`. It requests the camera only when the person presses **Turn on camera**, ignores a permission result that arrives after leaving the screen, and stops tracks on unmount or **Turn off camera**.
+  - `CameraPanel.tsx` runs a 3-second countdown and captures the mirrored frame to the active slot. `captureFrame.ts` draws the frame to a canvas and returns a JPEG object URL.
+  - `UploadPanel.tsx` and `readImageFile.ts` accept JPEG, PNG or WebP up to 15 MB, check that the image decodes, and fill the active slot and then the empty ones. Files never leave the browser.
+  - `SlotStrip.tsx` shows the template geometry with photos. Selecting a slot targets it for retake or replace, and each filled slot has a remove button. `CaptureScreen.tsx` composes these, and **Continue** stays disabled until every slot is filled.
+- The catalog is placeholder data. Create Your Own is three fixed blank templates (1, 2, 4 photos); Surprise me is not built.
 
 ## Suggested structure as features arrive
 
@@ -52,7 +69,7 @@ Use Vite client environment variables only for values safe to expose in a built 
 ## Open choices
 
 - Navigation approach once there are multiple journey screens.
-- The behavior when someone changes to a template with a different slot count after adding photos.
+- The behavior when someone changes to a template with a different slot count after adding photos. The current code keeps photos separately for each template; a migration between templates is not built.
 - Session state mechanism and whether drafts survive refresh.
 - Preview rendering strategy and its performance on lower-powered phones.
 - Test runner and browser automation tools when the first testable feature is added.
