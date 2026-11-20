@@ -6,6 +6,8 @@ import { AppHeader } from './components/layout/AppHeader'
 import { StepIndicator } from './components/layout/StepIndicator'
 import { CaptureScreen } from './features/camera/CaptureScreen'
 import { usePhotoSession } from './features/camera/usePhotoSession'
+import { CustomizeScreen } from './features/editor/CustomizeScreen'
+import { useEditSettings } from './features/editor/useEditSettings'
 import { ChooseLook } from './features/templates/ChooseLook'
 import { useTemplateSelection } from './features/templates/useTemplateSelection'
 import { StepPlaceholder } from './pages/StepPlaceholder'
@@ -14,6 +16,7 @@ function App() {
   const [step, setStep] = useState<JourneyStep>('select')
   const selection = useTemplateSelection()
   const photos = usePhotoSession(selection.template)
+  const edits = useEditSettings()
 
   const index = stepIndex(step)
   const go = (delta: number) => setStep(steps[index + delta].id)
@@ -39,6 +42,14 @@ function App() {
                 <CaptureScreen
                   template={selection.template}
                   session={photos}
+                  onBack={() => go(-1)}
+                  onContinue={() => go(1)}
+                />
+              ) : step === 'customize' ? (
+                <CustomizeScreen
+                  template={selection.template}
+                  photos={photos}
+                  edits={edits}
                   onBack={() => go(-1)}
                   onContinue={() => go(1)}
                 />

@@ -21,6 +21,11 @@ The shell follows the [UI](UI.md) journey. It starts on Choose look, has no land
   - `CameraPanel.tsx` runs a 3-second countdown and captures the mirrored frame to the active slot. `captureFrame.ts` draws the frame to a canvas and returns a JPEG object URL.
   - `UploadPanel.tsx` and `readImageFile.ts` accept JPEG, PNG or WebP up to 15 MB, check that the image decodes, and fill the active slot and then the empty ones. Files never leave the browser.
   - `SlotStrip.tsx` shows the template geometry with photos. Selecting a slot targets it for retake or replace, and each filled slot has a remove button. `CaptureScreen.tsx` composes these, and **Continue** stays disabled until every slot is filled.
+- `features/editor/` implements Customize:
+  - `presets.ts` holds the photo style presets (6 frame/background colors, 5 filters), kept apart from the app UI tokens. Filters are CSS filter strings so export can reuse them with canvas `ctx.filter`; this has not been checked in every target browser.
+  - `useEditSettings.ts` holds the edits as data (`frameId`, `filterId`, `caption`) for the whole session, separate from the template defaults. Edits apply to the original photos at render time.
+  - `CompositionPreview.tsx` renders template geometry, photos, frame, filter and caption at the export aspect ratio, sized with container units so it scales without changing the ratio. A caption band is always reserved. It shows an alert if a photo fails to load. Review and Export should reuse it.
+  - `CustomizeScreen.tsx` pairs the preview with controls built from `components/ui/ChoiceGroup.tsx` (native radio inputs) and a caption field, plus **Reset edits**.
 - The catalog is placeholder data. Create Your Own is three fixed blank templates (1, 2, 4 photos); Surprise me is not built.
 
 ## Suggested structure as features arrive
