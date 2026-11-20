@@ -1,5 +1,6 @@
-import { useId, useState, type DragEvent } from 'react'
+import { useEffect, useId, useRef, useState, type DragEvent } from 'react'
 import { acceptAttribute, readImageFile } from './readImageFile'
+import { createUploadBatch } from './uploadBatch'
 
 interface Props {
   targetLabel: string
@@ -12,15 +13,20 @@ export function UploadPanel({ targetLabel, onFiles }: Props) {
   const [errors, setErrors] = useState<string[]>([])
   const [reading, setReading] = useState(false)
   const [dragging, setDragging] = useState(false)
+  const [batch] = useState(() => createUploadBatch(readImageFile, URL.revokeObjectURL))
+  const onFilesRef = useRef(onFiles)
+  useEffect(() => { onFilesRef.current = onFiles }, [onFiles])
+  useEffect(() => () => batch.cancel(), [batch])
 
   const handle = async (files: File[]) => {
-    if (files.length === 0) return
+    if (files.length === 0 || reading) return
     setReading(true)
-    const results = await Promise.all(files.map(readImageFile))
+    const results = await batch.read(files)
+    if (!results) return
     const urls = results.flatMap((r) => ('url' in r ? [r.url] : []))
     const problems = results.flatMap((r) => ('error' in r ? [r.error] : []))
     if (urls.length > 0) {
-      const placed = onFiles(urls)
+      const placed = onFilesRef.current(urls)
       if (placed < urls.length) problems.push('Some photos were skipped because every slot is filled.')
     }
     setErrors(problems)
@@ -34,7 +40,7 @@ export function UploadPanel({ targetLabel, onFiles }: Props) {
   }
 
   return (
-    <div>
+    <div aria-busy={reading}>
       <label
         htmlFor={inputId}
         onDragOver={(e) => {
@@ -43,7 +49,7 @@ export function UploadPanel({ targetLabel, onFiles }: Props) {
         }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
-        className={`mx-auto flex aspect-[4/3] w-full max-w-xl cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed p-6 text-center ${
+        className={`mx-auto flex aspect-[4/3] w-full max-w-xl cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed p-6 text-center focus-within:outline-2 focus-within:outline-accent ${
           dragging ? 'border-accent bg-surface' : 'border-line bg-surface hover:border-ink'
         }`}
       >
@@ -54,18 +60,22 @@ export function UploadPanel({ targetLabel, onFiles }: Props) {
         <span className="mt-4 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-surface">
           {reading ? 'Reading…' : 'Browse files'}
         </span>
+        <input
+          id={inputId}
+          type="file"
+          multiple
+          disabled={reading}
+          accept={acceptAttribute}
+          className="sr-only"
+          onChange={(e) => {
+            void handle(Array.from(e.target.files ?? []))
+            e.target.value = ''
+          }}
+        />
       </label>
-      <input
-        id={inputId}
-        type="file"
-        multiple
-        accept={acceptAttribute}
-        className="sr-only"
-        onChange={(e) => {
-          void handle(Array.from(e.target.files ?? []))
-          e.target.value = ''
-        }}
-      />
+      <p role="status" className="mt-2 text-center text-sm text-muted">
+        {reading ? 'Reading photos. Wait before adding more; the selected slot is filled when reading finishes.' : ''}
+      </p>
       <div role="alert" className="mt-3 min-h-6 text-center text-sm text-red-700">
         {errors.map((message) => (
           <p key={message}>{message}</p>

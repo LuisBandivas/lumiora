@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react'
 import { motion } from 'motion/react'
 import { ChoiceGroup } from '../../components/ui/ChoiceGroup'
+import { navigateTabs } from '../../components/ui/tabNavigation'
 import type { PhotoSession } from '../camera/usePhotoSession'
 import type { Template } from '../templates/catalog'
 import { CompositionPreview } from './CompositionPreview'
@@ -72,7 +73,7 @@ export function CustomizeScreen({ template, photos, edits, onBack, onContinue }:
         </p>
       </div>
 
-      <div className="mx-auto mt-2 flex w-full max-w-5xl flex-1 flex-col gap-4 px-4 [--preview-h:clamp(11rem,38vh,18rem)] md:mt-8 md:grid md:grid-cols-[auto_1fr] md:items-start md:gap-8 md:[--preview-h:clamp(16rem,55vh,30rem)]">
+      <div className="mx-auto mt-2 flex w-full max-w-5xl flex-1 flex-col gap-4 px-4 [--preview-h:clamp(11rem,38vh,18rem)] md:mt-8 md:grid md:grid-cols-2 md:items-start md:gap-8 md:[--preview-h:clamp(16rem,55vh,30rem)]">
         {/* Pinned on phones so the preview stays visible while adjusting controls below it. */}
         <div className="sticky top-0 z-10 -mx-4 flex justify-center bg-canvas/95 px-4 py-2 backdrop-blur md:top-4 md:mx-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
           <CompositionPreview
@@ -92,8 +93,8 @@ export function CustomizeScreen({ template, photos, edits, onBack, onContinue }:
           />
         </div>
 
-        <div className="flex flex-col gap-4 md:gap-6">
-          <div role="tablist" aria-label="Editing options" className="flex gap-2 overflow-x-auto md:hidden">
+        <div className="flex min-w-0 flex-col gap-4 md:gap-6">
+          <div role="tablist" onKeyDown={navigateTabs} aria-label="Editing options" className="flex gap-2 overflow-x-auto md:hidden">
             {panels.map((p) => (
               <button
                 key={p.id}
@@ -101,6 +102,7 @@ export function CustomizeScreen({ template, photos, edits, onBack, onContinue }:
                 role="tab"
                 type="button"
                 aria-selected={p.id === panel}
+                tabIndex={p.id === panel ? 0 : -1}
                 aria-controls={`panel-${p.id}`}
                 onClick={() => setPanel(p.id)}
                 className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${

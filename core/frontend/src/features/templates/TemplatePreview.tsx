@@ -14,7 +14,7 @@ const emptySlots = (count: number) => Array.from({ length: count }, () => null)
 // Draws the template with its own default frame and filter and empty photo slots.
 export function TemplatePreview({ template, heightRem, active = true }: Props) {
   return (
-    <div aria-hidden="true" className={`transition-opacity ${active ? 'opacity-100' : 'opacity-50'}`}>
+    <div aria-hidden="true" className={`flex min-w-0 max-w-full justify-center transition-opacity ${active ? 'opacity-100' : 'opacity-50'}`}>
       <CompositionPreview
         template={template}
         slots={emptySlots(template.photoCount)}

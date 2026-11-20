@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { steps, stepIndex, type JourneyStep } from './app/journey'
 import { AppFooter } from './components/layout/AppFooter'
@@ -19,10 +19,16 @@ function App() {
   const photos = usePhotoSession(selection.template)
   const edits = useEditSettings()
 
-  // A new step starts at the top; otherwise it opens at the previous screen's scroll offset.
-  useEffect(() => {
+  // Runs when the incoming screen mounts, after the outgoing transition has finished.
+  const focusStep = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return
+    const heading = node.querySelector('h1')
+    if (heading) {
+      heading.tabIndex = -1
+      heading.focus({ preventScroll: true })
+    }
     window.scrollTo(0, 0)
-  }, [step])
+  }, [])
 
   const index = stepIndex(step)
   const go =(delta: number) => setStep(steps[index + delta].id)
@@ -37,6 +43,7 @@ function App() {
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={step}
+              ref={focusStep}
               className="flex flex-1 flex-col"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}

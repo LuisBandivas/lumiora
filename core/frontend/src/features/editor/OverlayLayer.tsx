@@ -60,7 +60,10 @@ export function OverlayLayer({ items, controls }: Props) {
       ArrowDown: [0, step],
     }
     const move = moves[event.key]
-    if (move) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      controls.onSelect(item.id)
+    } else if (move) {
       event.preventDefault()
       controls.onChange(item.id, { x: clamp01(item.x + move[0]), y: clamp01(item.y + move[1]) })
     } else if (event.key === 'Delete' || event.key === 'Backspace') {
@@ -87,6 +90,7 @@ export function OverlayLayer({ items, controls }: Props) {
             tabIndex={controls ? 0 : undefined}
             aria-label={controls ? `${overlayLabel(item)}. Drag or use arrow keys to move, Delete to remove.` : undefined}
             aria-pressed={controls ? selected : undefined}
+            onFocus={() => controls?.onSelect(item.id)}
             onPointerDown={(e) => onPointerDown(e, item)}
             onPointerMove={(e) => onPointerMove(e, item)}
             onPointerUp={() => (dragRef.current = null)}

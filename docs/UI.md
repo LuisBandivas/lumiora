@@ -1,6 +1,6 @@
 # UI and interaction direction
 
-**Status: proposed.** The current app is a UI shell: header, five-step progress bar, a working Choose look screen with placeholder templates, and placeholder screens for the remaining steps (see [Frontend](FRONTEND.md#ui-shell-implemented)). The [design philosophy](../README.md#design-philosophy) sets a modern, sharp, light-themed interface and leaves the style of each person's photo output open to creative choice. [RollBooth's selection page](https://rollbooth.com/layout?tab=frames) is a reference for category-led browsing and a clear next action; Lumiora's visual language and assets should be its own.
+**Status: working draft.** The current app implements the five-step local journey, from template selection through capture/upload, customization, review and PNG export (see [Frontend](FRONTEND.md#ui-shell-implemented)). Release scope and visual foundations remain provisional. The [design philosophy](../README.md#design-philosophy) sets a modern, sharp, light-themed interface and leaves the style of each person's photo output open to creative choice. [RollBooth's selection page](https://rollbooth.com/layout?tab=frames) is a reference for category-led browsing and a clear next action; Lumiora's visual language and assets should be its own.
 
 ## Main journey
 
@@ -42,10 +42,10 @@ The proposed URL is `/create?category=frames&template=minimal-white`. It identif
 ## Responsive layout
 
 - **Mobile selection:** make category navigation horizontally scrollable, center one large template preview, and keep **Continue with this** easy to reach in a sticky bottom area.
-- **Desktop selection:** show the active template prominently with neighboring previews and clear previous/next controls.
+- **Desktop selection:** show the active template prominently with neighboring previews at 1024 px and wider, and clear previous/next controls. Below that width, show only the active preview. Each preview fits its available column without changing its aspect ratio. Pagination dots have 44 px touch targets.
 - **Mobile capture/editor:** prioritize the camera or strip preview; place the primary action within easy reach and keep editing controls in a compact panel.
 - **Phone Customize (implemented):** below the `md` breakpoint (768 px) the strip preview is pinned to the top at about 38% of the viewport height (11 to 18 rem). Controls sit under it in three tabs: **Look** (frame and filter), **Caption**, and **Stickers and text**. One group shows at a time, so the preview stays visible while a sticker's size, rotation or color is changed. Selecting a sticker or text item on the preview opens the **Stickers and text** tab. The Continue bar is pinned to the bottom. Focus scrolling leaves room for both pinned areas, so a keyboard user's focused control never ends up underneath them. At `md` and wider, which includes a phone held sideways and portrait tablets, the preview sits beside all control groups and there are no tabs.
-- **Step changes** open at the top of the page, not at the previous screen's scroll offset.
+- **Step changes** open at the top of the page and move keyboard focus to the incoming heading after the previous screen exits.
 - **Desktop capture/editor:** allow preview and controls to sit side by side where space permits.
 - Make previews adapt to available width without changing the composition's export aspect ratio.
 - Check landscape orientation and small viewports before calling a screen complete.
@@ -64,6 +64,7 @@ Create actual color, type, spacing, radius, and focus tokens after the first wir
 
 - Semantic buttons, labels, visible focus, and a logical keyboard order.
 - Category controls and template navigation need keyboard access and an announced active selection; the carousel must not require dragging.
+- **Implemented:** category, source and mobile editor tabs use Left/Right arrows and Home/End with one tab stop per list. Focusing a decoration opens its controls; Enter/Space selects it, arrows move it and Delete removes it.
 - Text status for countdown, capture progress, and errors; do not rely on color or animation alone.
 - Touch targets large enough for comfortable use and no hover-only essential action.
 - Camera preview and final composition have appropriate accessible names or descriptions; decorative elements stay out of the accessibility tree.

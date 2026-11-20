@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { categories, photoCountLabel } from './catalog'
 import { TemplatePreview } from './TemplatePreview'
 import { useTemplateSelection } from './useTemplateSelection'
+import { navigateTabs } from '../../components/ui/tabNavigation'
 
 interface Props {
   selection: ReturnType<typeof useTemplateSelection>
@@ -27,6 +28,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
 
       <div
         role="tablist"
+        onKeyDown={navigateTabs}
         aria-label="Template categories"
         className="mx-auto mt-6 flex w-full max-w-5xl gap-2 overflow-x-auto px-4 pb-1 sm:justify-center"
       >
@@ -36,6 +38,9 @@ export function ChooseLook({ selection, onContinue }: Props) {
             <button
               key={c.id}
               role="tab"
+              id={`category-${c.id}`}
+              aria-controls="template-panel"
+              tabIndex={selected ? 0 : -1}
               type="button"
               aria-selected={selected}
               onClick={() => selectCategory(c.id)}
@@ -57,7 +62,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
         </p>
       )}
 
-      <div role="tabpanel" className="mx-auto mt-8 w-full max-w-5xl flex-1 px-4">
+      <div role="tabpanel" id="template-panel" aria-labelledby={`category-${category}`} className="mx-auto mt-8 w-full max-w-5xl flex-1 px-4">
         {options.length === 0 ? (
           <p className="py-16 text-center text-muted">No templates in this category yet.</p>
         ) : (
@@ -72,15 +77,16 @@ export function ChooseLook({ selection, onContinue }: Props) {
               ←
             </button>
 
-            <div className="flex items-center gap-8">
+            <div className="grid min-w-0 flex-1 grid-cols-1 items-center gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]">
               {neighbours && options.length > 2 && (
-                <div onClick={previous} className="hidden cursor-pointer md:block">
+                <button type="button" aria-label={`Select ${prev.name}`} onClick={previous} className="hidden min-w-0 cursor-pointer lg:block">
                   <TemplatePreview template={prev} heightRem={14} active={false} />
-                </div>
+                </button>
               )}
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={template.id}
+                  className="min-w-0"
                   initial={{ opacity: 0, scale: 0.94 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.94 }}
@@ -90,9 +96,9 @@ export function ChooseLook({ selection, onContinue }: Props) {
                 </motion.div>
               </AnimatePresence>
               {neighbours && (
-                <div onClick={next} className="hidden cursor-pointer md:block">
+                <button type="button" aria-label={`Select ${following.name}`} onClick={next} className="hidden min-w-0 cursor-pointer lg:block">
                   <TemplatePreview template={following} heightRem={14} active={false} />
-                </div>
+                </button>
               )}
             </div>
 
@@ -115,7 +121,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
           </p>
         </div>
 
-        <ul className="mt-4 flex justify-center gap-2" aria-label="Templates in this category">
+        <ul className="mt-4 flex flex-wrap justify-center" aria-label="Templates in this category">
           {options.map((t) => (
             <li key={t.id}>
               <button
@@ -123,8 +129,10 @@ export function ChooseLook({ selection, onContinue }: Props) {
                 onClick={() => selectTemplate(t)}
                 aria-label={`${t.name}, ${photoCountLabel(t.photoCount)}`}
                 aria-current={t.id === template.id}
-                className={`size-2.5 rounded-full ${t.id === template.id ? 'bg-ink' : 'bg-line'}`}
-              />
+                className="grid size-11 place-items-center rounded-full"
+              >
+                <span aria-hidden="true" className={`size-2.5 rounded-full ${t.id === template.id ? 'bg-ink' : 'bg-line'}`} />
+              </button>
             </li>
           ))}
         </ul>

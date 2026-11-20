@@ -37,9 +37,11 @@ npm run build
 npm test
 ```
 
-`npm run build` includes TypeScript checking. `npm test` runs 27 unit tests covering the template catalog and its geometry, selection URL validation, photo slot placement and the edit and overlay data. Report any check that could not run and why.
+`npm run build` includes TypeScript checking. `npm test` runs 30 unit tests covering the template catalog and its geometry, selection URL validation, photo slot placement, edit and overlay data, and upload overlap/cancellation/error recovery. On Windows with PowerShell script execution disabled, use `npm.cmd` for these commands. Report any check that could not run and why.
 
 There is no automated browser test in the repository. The camera, upload, drag, export and responsive behavior were checked once by hand-driving Edge with Playwright and a fake camera (26 steps across the whole journey on desktop and a 390 px phone, including a real PNG download compared with the preview). That script is not committed. Adding browser automation to the project is still **Open**; until then, repeat that pass in a real browser after changes to capture, the editor or export.
+
+The 2026-11-20 browser pass used headless Edge and a temporary local Playwright script. All 18 templates fit at 320, 768 and 1280 px with their aspect ratios preserved. It also verified wide-template Customize/Review/Export layouts at those widths, heading focus, tab navigation, keyboard decoration selection/movement/deletion, upload placement after slot changes, cancellation and URL cleanup during decoding, fake-camera capture and a successful PNG download. Mobile screenshots were inspected. Safari, Firefox, physical-camera behavior and touch dragging were not rechecked in this pass.
 
 ## Change review
 

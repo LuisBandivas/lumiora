@@ -33,14 +33,14 @@ export function CompositionPreview({
   }${overlays.length ? `, ${overlays.length} sticker or text items` : ''}`
 
   return (
-    <figure className="m-0 flex flex-col items-center gap-2">
+    <figure className="m-0 flex min-w-0 max-w-full flex-col items-center gap-2" style={{ width: `calc(${height} * ${template.aspect})` }}>
       <div
         // Interactive items must stay reachable, so only the read-only preview is an image.
         role={overlayControls ? 'group' : 'img'}
         aria-label={description}
         className="relative overflow-hidden shadow-md ring-1 ring-line transition-colors duration-200"
         style={{
-          height,
+          width: '100%',
           aspectRatio: String(template.aspect),
           background: frame.background,
           containerType: 'inline-size',

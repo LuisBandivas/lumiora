@@ -20,7 +20,7 @@ export function SlotStrip({ template, session }: Props) {
       aria-label={`${template.name} photo slots`}
       className="shadow-md ring-1 ring-line"
       style={{
-        height: 'clamp(14rem, 50vh, 28rem)',
+        width: `min(100%, calc(clamp(14rem, 50vh, 28rem) * ${template.aspect}))`,
         aspectRatio: String(template.aspect),
         background: frame.background,
         containerType: 'inline-size',

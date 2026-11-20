@@ -1,6 +1,6 @@
 # Lumiora frontend
 
-This is the Vite, React, TypeScript, and Tailwind starter for Lumiora. It currently renders a placeholder screen. Product and implementation plans are in [the planning documents](../../docs/README.md).
+This is Lumiora's Vite, React, TypeScript, and Tailwind frontend. It implements template selection, local camera capture and upload, customization, review, and PNG download. Product decisions and remaining open choices are in [the planning documents](../../docs/README.md).
 
 ## Local development
 
@@ -11,16 +11,17 @@ npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite. The placeholder does not use the camera yet.
+Open the local URL printed by Vite. Camera access starts only when requested; photos remain in the browser tab and are lost on refresh or close.
 
 ## Checks
 
 ```sh
 npm run lint
 npm run build
+npm test
 ```
 
-`build` includes TypeScript checking. Automated tests have not been configured yet; see [coding guidance](../../docs/CODING.md).
+`build` includes TypeScript checking. Vitest covers the session helpers, templates, edits and upload lifecycle; see [coding guidance](../../docs/CODING.md). Use `npm.cmd` on Windows if PowerShell blocks `npm.ps1`.
 
 ## Environment
 

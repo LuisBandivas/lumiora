@@ -60,6 +60,7 @@ Gallery and sharing depend on product and privacy decisions in [Architecture](AR
 
 ## Cross-cutting behavior
 
+- **Implemented:** uploads accept one batch at a time and decode sequentially. The selected slot at completion receives the first photo, using the latest slot state. Leaving the upload panel cancels the pending batch and releases its decoded photos. No files are sent to a server.
 - A session should make clear when its photos exist only in the browser and may be lost on refresh or close.
 - Camera permission denial, unavailable hardware, capture failure, and export failure need distinct user-facing states.
 - Controls should work with keyboard and touch; countdown status and errors need text equivalents.

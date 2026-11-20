@@ -5,6 +5,7 @@ import { CameraPanel } from './CameraPanel'
 import { SlotStrip } from './SlotStrip'
 import { UploadPanel } from './UploadPanel'
 import type { PhotoSession } from './usePhotoSession'
+import { navigateTabs } from '../../components/ui/tabNavigation'
 
 type Source = 'camera' | 'upload'
 
@@ -36,13 +37,16 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
         </p>
       </div>
 
-      <div className="mx-auto mt-8 grid w-full max-w-5xl flex-1 gap-8 px-4 lg:grid-cols-[1fr_auto] lg:items-start">
-        <div>
-          <div role="tablist" aria-label="Photo source" className="mb-4 flex justify-center gap-2">
+      <div className="mx-auto mt-8 grid w-full max-w-5xl flex-1 gap-8 px-4 lg:grid-cols-2 lg:items-start">
+        <div className="min-w-0">
+          <div role="tablist" onKeyDown={navigateTabs} aria-label="Photo source" className="mb-4 flex justify-center gap-2">
             {sources.map((s) => (
               <button
                 key={s.id}
                 role="tab"
+                id={`source-${s.id}`}
+                aria-controls="source-panel"
+                tabIndex={s.id === source ? 0 : -1}
                 type="button"
                 aria-selected={s.id === source}
                 onClick={() => setSource(s.id)}
@@ -56,7 +60,7 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
               </button>
             ))}
           </div>
-          <div role="tabpanel">
+          <div role="tabpanel" id="source-panel" aria-labelledby={`source-${source}`}>
             {source === 'camera' ? (
               <CameraPanel
                 targetLabel={targetLabel}
@@ -69,7 +73,7 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex min-w-0 flex-col items-center gap-3">
           <SlotStrip template={template} session={session} />
           <p className="text-sm text-muted" aria-live="polite">
             {session.filled} of {template.photoCount} photos

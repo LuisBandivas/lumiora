@@ -58,7 +58,7 @@ Local upload of existing photos is proposed; its first-release scope is still op
 - Simple and intuitive navigation
 - Browser-based experience with no installation required
 
-> **Development Note:** Lumiora is currently in the planning and design phase. The features listed above represent the intended functionality and may evolve during development.
+> **Development Note:** A browser-only prototype implements selection, capture/upload, customization and PNG download. Release scope and visual design remain provisional. Gallery, sharing and accounts are future possibilities.
 
 ## Technology Stack
 
@@ -67,7 +67,7 @@ The starter in `core/frontend` currently uses React, TypeScript, Vite, and Tailw
 | Technology | Current status or possible use |
 |---|---|
 | React, TypeScript, Vite, Tailwind CSS | Installed frontend starter |
-| HTML Canvas API, MediaDevices API | Proposed browser capture and export |
+| HTML Canvas API, MediaDevices API | Implemented local capture and PNG export |
 | Zustand | Possible state management if needed |
 | Supabase | Possible later authentication, database, and storage |
 | Vercel | Possible deployment and hosting |
@@ -135,17 +135,17 @@ Camera access requires user permission and a secure browser context, such as HTT
 
 ### Phase 2 — Core Development
 - [x] Initialize frontend project starter
-- [ ] Implement application navigation
-- [ ] Integrate camera functionality
-- [ ] Build countdown and photo capture system
-- [ ] Implement template selection and image-slot layouts
+- [x] Implement application navigation
+- [x] Integrate camera functionality
+- [x] Build countdown and photo capture system
+- [x] Implement template selection and image-slot layouts
 
 ### Phase 3 — Customization
-- [ ] Add photo filters
-- [ ] Implement customizable frames
-- [ ] Add stickers and decorative elements
-- [ ] Build photo preview and editing functionality
-- [ ] Implement image exporting and downloading
+- [x] Add photo filters
+- [x] Implement customizable frames
+- [x] Add stickers and decorative elements
+- [x] Build photo preview and editing functionality
+- [x] Implement image exporting and downloading
 
 ### Phase 4 — Gallery and Sharing
 - [ ] Implement optional authentication
@@ -171,9 +171,9 @@ Planned privacy measures include secure photo storage, controlled gallery access
 
 ## Project Status
 
-**Planning & UI/UX Design**
+**Local prototype implemented; release scope and design under review**
 
-Lumiora is currently in the design and planning phase. Features, technologies, and implementation details may evolve throughout development.
+The complete local photo journey is implemented. Browser support, release scope and visual design still need review; cloud features are not implemented.
 
 ## Contributing
 
