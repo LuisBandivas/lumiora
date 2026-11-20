@@ -44,6 +44,8 @@ The proposed URL is `/create?category=frames&template=minimal-white`. It identif
 - **Mobile selection:** make category navigation horizontally scrollable, center one large template preview, and keep **Continue with this** easy to reach in a sticky bottom area.
 - **Desktop selection:** show the active template prominently with neighboring previews and clear previous/next controls.
 - **Mobile capture/editor:** prioritize the camera or strip preview; place the primary action within easy reach and keep editing controls in a compact panel.
+- **Phone Customize (implemented):** below the `md` breakpoint (768 px) the strip preview is pinned to the top at about 38% of the viewport height (11 to 18 rem). Controls sit under it in three tabs: **Look** (frame and filter), **Caption**, and **Stickers and text**. One group shows at a time, so the preview stays visible while a sticker's size, rotation or color is changed. Selecting a sticker or text item on the preview opens the **Stickers and text** tab. The Continue bar is pinned to the bottom. Focus scrolling leaves room for both pinned areas, so a keyboard user's focused control never ends up underneath them. At `md` and wider, which includes a phone held sideways and portrait tablets, the preview sits beside all control groups and there are no tabs.
+- **Step changes** open at the top of the page, not at the previous screen's scroll offset.
 - **Desktop capture/editor:** allow preview and controls to sit side by side where space permits.
 - Make previews adapt to available width without changing the composition's export aspect ratio.
 - Check landscape orientation and small viewports before calling a screen complete.
@@ -75,7 +77,7 @@ Create actual color, type, spacing, radius, and focus tokens after the first wir
 - Whether the five-step indicator includes a separate landing page or begins on Choose look; the current proposal and the shell begin on Choose look. RollBooth uses a landing page with a mode picker; Lumiora has not adopted one.
 - Whether Surprise me selects within the current category or all templates.
 - Whether capture is automatic after countdown or initiated for each slot. The shell starts the countdown for each photo on request and moves to the next empty slot afterward.
-- How much editing fits on a phone without obscuring the strip preview. In the current Customize screen on a 390 px phone, the selected sticker's size, rotation and color controls sit below the preview, so the preview scrolls out of view while adjusting them. This is unresolved.
+- Whether the phone editing layout (below) needs more than three tabs once more editing tools exist. The current layout keeps the preview in view while any control is adjusted.
 
 ## Next design deliverable
 

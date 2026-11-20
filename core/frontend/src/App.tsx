@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { steps, stepIndex, type JourneyStep } from './app/journey'
 import { AppFooter } from './components/layout/AppFooter'
@@ -19,8 +19,13 @@ function App() {
   const photos = usePhotoSession(selection.template)
   const edits = useEditSettings()
 
+  // A new step starts at the top; otherwise it opens at the previous screen's scroll offset.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [step])
+
   const index = stepIndex(step)
-  const go = (delta: number) => setStep(steps[index + delta].id)
+  const go =(delta: number) => setStep(steps[index + delta].id)
 
   return (
     <MotionConfig reducedMotion="user">
