@@ -33,7 +33,7 @@ The selection screen should show category navigation, large previews with previo
 
 The table describes proposed behavior, not a promise that every control or visual treatment must ship at once. A vertical slice may start with one template, camera capture, and download, then broaden after the full path works. Whether file upload joins the first release remains open.
 
-**Implemented in the shell (provisional):** Capture or upload offers both camera and local upload. The camera starts only on request, the countdown is 3 seconds and runs once per photo, and the captured image is mirrored to match the preview. Upload accepts JPEG, PNG and WebP up to 15 MB. Both of these remain **Open** below. Customize offers frame/background colors, five filters and a caption of up to 30 characters; stickers and movable text are not built. Review and Export are still placeholders.
+**Implemented in the shell (provisional):** Capture or upload offers both camera and local upload. The camera starts only on request, the countdown is 3 seconds and runs once per photo, and the captured image is mirrored to match the preview. Upload accepts JPEG, PNG and WebP up to 15 MB. Both of these remain **Open** below. Customize offers frame/background colors, five filters and a caption of up to 30 characters; stickers and movable text are not built. Review shows the final composition with a shortcut back to editing. Export renders a PNG locally, 1200 px wide with the template's height, named `lumiora-<template-id>.png`; these values are provisional. No step sends photos anywhere.
 
 ## Later candidates
 

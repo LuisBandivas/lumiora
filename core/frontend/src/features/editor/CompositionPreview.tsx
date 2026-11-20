@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Template } from '../templates/catalog'
+import { LAYOUT } from './compositionLayout'
 import { resolveEdits, type EditSettings } from './useEditSettings'
 
 interface Props {
@@ -31,11 +32,14 @@ export function CompositionPreview({ template, slots, edits, height = 'clamp(16r
           containerType: 'inline-size',
         }}
       >
-        <div className="flex size-full flex-col" style={{ padding: '5cqw', gap: '3cqw' }}>
+        <div
+          className="flex size-full flex-col"
+          style={{ padding: `${LAYOUT.padding}cqw`, gap: `${LAYOUT.gap}cqw` }}
+        >
           <div
             className="grid min-h-0 flex-1"
             style={{
-              gap: '3cqw',
+              gap: `${LAYOUT.gap}cqw`,
               gridTemplateColumns: `repeat(${template.columns}, 1fr)`,
               gridTemplateRows: `repeat(${rows}, 1fr)`,
             }}
@@ -57,7 +61,11 @@ export function CompositionPreview({ template, slots, edits, height = 'clamp(16r
           {/* The caption band is always reserved so typing never resizes the photos. */}
           <p
             className="m-0 flex items-center justify-center truncate text-center font-medium"
-            style={{ height: '8cqw', fontSize: '5cqw', color: frame.ink }}
+            style={{
+              height: `${LAYOUT.captionHeight}cqw`,
+              fontSize: `${LAYOUT.captionFont}cqw`,
+              color: frame.ink,
+            }}
           >
             {caption}
           </p>

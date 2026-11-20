@@ -10,7 +10,8 @@ import { CustomizeScreen } from './features/editor/CustomizeScreen'
 import { useEditSettings } from './features/editor/useEditSettings'
 import { ChooseLook } from './features/templates/ChooseLook'
 import { useTemplateSelection } from './features/templates/useTemplateSelection'
-import { StepPlaceholder } from './pages/StepPlaceholder'
+import { ReviewScreen } from './features/editor/ReviewScreen'
+import { ExportScreen } from './features/export/ExportScreen'
 
 function App() {
   const [step, setStep] = useState<JourneyStep>('select')
@@ -53,12 +54,25 @@ function App() {
                   onBack={() => go(-1)}
                   onContinue={() => go(1)}
                 />
-              ) : (
-                <StepPlaceholder
-                  step={step}
+              ) : step === 'review' ? (
+                <ReviewScreen
                   template={selection.template}
+                  photos={photos}
+                  edits={edits}
+                  onEdit={() => go(-1)}
+                  onContinue={() => go(1)}
+                />
+              ) : (
+                <ExportScreen
+                  template={selection.template}
+                  photos={photos}
+                  edits={edits}
                   onBack={() => go(-1)}
-                  onContinue={index < steps.length - 1 ? () => go(1) : null}
+                  onStartOver={() => {
+                    photos.clearAll()
+                    edits.reset()
+                    setStep('select')
+                  }}
                 />
               )}
             </motion.div>

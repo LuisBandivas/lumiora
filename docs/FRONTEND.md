@@ -13,7 +13,10 @@ The shell follows the [UI](UI.md) journey. It starts on Choose look, has no land
 - `src/App.tsx` holds the journey step (`select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes.
 - `src/app/journey.ts` defines the five steps. `components/layout/` holds `AppHeader`, `StepIndicator` (earlier steps are clickable, later ones disabled) and `AppFooter`.
 - `features/templates/` holds the placeholder catalog (`catalog.ts`), the selection hook that reads and writes `/create?category=…&template=…` with `history.replaceState` and validates IDs with a fallback notice (`useTemplateSelection.ts`), the placeholder preview (`TemplatePreview.tsx`) and the Choose look screen (`ChooseLook.tsx`).
-- `pages/StepPlaceholder.tsx` stands in for Capture or upload, Customize, Review and Export until those features are built.
+- All five journey screens are implemented. The placeholder page was removed.
+- `features/editor/ReviewScreen.tsx` shows the final `CompositionPreview` with **Continue to export** and **Edit**.
+- `features/export/` implements Export. `ExportScreen.tsx` has the states `ready`, `exporting`, `downloaded` and `error`, with **Try again** on failure. `editor/renderComposition.ts` draws the PNG on a canvas from the original photos and the edits, using the same proportions as the preview (`editor/compositionLayout.ts`). `downloadBlob.ts` triggers the download. **Start over** releases every photo and resets the edits.
+- Export checks that the browser's canvas really applies filters, because Safari accepts `ctx.filter` without applying it. If it does not, an export with a filter fails with a message instead of producing an image that differs from the preview.
 - Application UI tokens (colors, font, radius, focus ring, reduced motion) are in `src/index.css`. They are a first pass pending wireframe review.
 - `features/camera/` implements Capture or upload:
   - `usePhotoSession.ts` keeps image slots per template ID as object URLs, with an active slot. Switching template neither loses photos nor mismatches slot counts. Slots are not persisted, so a refresh clears them.

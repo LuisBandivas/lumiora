@@ -51,7 +51,15 @@ export function usePhotoSession(template: Template) {
     commit(next, index)
   }
 
+  /** Releases every photo in the session, for all templates. */
+  const clearAll = () => {
+    Object.values(store).forEach((list) => list.forEach((url) => url && URL.revokeObjectURL(url)))
+    setStore({})
+    setActive(0)
+  }
+
   return {
+    clearAll,
     slots,
     active,
     filled,
