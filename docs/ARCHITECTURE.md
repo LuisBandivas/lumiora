@@ -4,7 +4,7 @@
 
 ## Current repository
 
-- `core/frontend` contains a Vite, React, TypeScript, and Tailwind starter. The UI is currently a placeholder.
+- `core/frontend` contains a Vite, React, TypeScript, and Tailwind starter. The frontend implements the local journey (choose, capture or upload, customize, review, export) entirely in the browser, with no backend calls.
 - `core/backend`, `supabase`, and `test` are present as empty planning directories.
 - Supabase and Vercel appear in the root README as planned technologies; neither is an integrated service here.
 

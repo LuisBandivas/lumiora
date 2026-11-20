@@ -71,7 +71,7 @@ Create actual color, type, spacing, radius, and focus tokens after the first wir
 
 - Brand mark, exact UI colors, fonts, illustrations, and icon style.
 - Initial photo style presets and how users can mix their elements.
-- Which templates appear in the first release and how each preview is shown.
+- Whether the implemented 18-template catalog is final (see [Features](FEATURES.md#first-release-template-catalog)). Each preview is the template drawn with its default frame and filter and empty slots.
 - Whether the five-step indicator includes a separate landing page or begins on Choose look; the current proposal and the shell begin on Choose look. RollBooth uses a landing page with a mode picker; Lumiora has not adopted one.
 - Whether Surprise me selects within the current category or all templates.
 - Whether capture is automatic after countdown or initiated for each slot. The shell starts the countdown for each photo on request and moves to the next empty slot afterward.

@@ -1,10 +1,12 @@
+import { useState } from 'react'
 import { motion } from 'motion/react'
 import { ChoiceGroup } from '../../components/ui/ChoiceGroup'
 import type { PhotoSession } from '../camera/usePhotoSession'
 import type { Template } from '../templates/catalog'
 import { CompositionPreview } from './CompositionPreview'
+import { OverlayPanel } from './OverlayPanel'
 import { CAPTION_MAX_LENGTH, filterPresets, framePresets } from './presets'
-import type { EditSession } from './useEditSettings'
+import { resolveEdits, type EditSession } from './useEditSettings'
 
 interface Props {
   template: Template
@@ -30,6 +32,10 @@ const filterChoices = filterPresets.map((f) => ({ id: f.id, label: f.label }))
 
 export function CustomizeScreen({ template, photos, edits, onBack, onContinue }: Props) {
   const { settings, update, reset, isDefault } = edits
+  // Which item is selected is temporary UI state, kept apart from the edit data.
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const resolved = resolveEdits(settings, template)
+  const selected = settings.overlays.find((o) => o.id === selectedId)
 
   return (
     <section aria-labelledby="customize-heading" className="flex flex-1 flex-col">
@@ -37,26 +43,42 @@ export function CustomizeScreen({ template, photos, edits, onBack, onContinue }:
         <h1 id="customize-heading" className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Customize
         </h1>
-        <p className="mt-2 text-muted">Pick a frame, a filter and an optional caption. Your photos are not changed.</p>
+        <p className="mt-2 text-muted">
+          Start from the {template.name} look, then change the frame, filter, caption, stickers and text. Your
+          photos are not changed.
+        </p>
       </div>
 
       <div className="mx-auto mt-8 grid w-full max-w-5xl flex-1 gap-8 px-4 lg:grid-cols-[auto_1fr] lg:items-start">
         <div className="flex justify-center">
-          <CompositionPreview template={template} slots={photos.slots} edits={settings} />
+          <CompositionPreview
+            template={template}
+            slots={photos.slots}
+            edits={settings}
+            overlayControls={{
+              selectedId,
+              onSelect: setSelectedId,
+              onChange: edits.updateOverlay,
+              onRemove: (id) => {
+                edits.removeOverlay(id)
+                setSelectedId(null)
+              },
+            }}
+          />
         </div>
 
         <div className="flex flex-col gap-6">
           <ChoiceGroup
             legend="Frame"
             name="frame"
-            value={settings.frameId}
+            value={resolved.frame.id}
             choices={frameChoices}
             onChange={(frameId) => update({ frameId })}
           />
           <ChoiceGroup
             legend="Filter"
             name="filter"
-            value={settings.filterId}
+            value={resolved.filter.id}
             choices={filterChoices}
             onChange={(filterId) => update({ filterId })}
           />
@@ -77,10 +99,21 @@ export function CustomizeScreen({ template, photos, edits, onBack, onContinue }:
               {settings.caption.length} / {CAPTION_MAX_LENGTH}
             </p>
           </div>
+
+          <OverlayPanel
+            edits={edits}
+            textColor={resolved.frame.ink}
+            selected={selected}
+            onSelect={setSelectedId}
+          />
+
           <div>
             <button
               type="button"
-              onClick={reset}
+              onClick={() => {
+                reset()
+                setSelectedId(null)
+              }}
               disabled={isDefault}
               className="rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium hover:border-ink disabled:opacity-40"
             >

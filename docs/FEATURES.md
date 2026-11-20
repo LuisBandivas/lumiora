@@ -21,6 +21,19 @@ A template defines its stable ID, category, photo count, image-slot geometry, an
 
 The selection screen should show category navigation, large previews with previous/next controls, the required photo count, a clear selected state, and a primary **Continue with this** action. **Surprise me** is an optional later browsing aid. The selected category and template may be represented by public URL parameters; photos must not be placed in the URL.
 
+### First-release template catalog
+
+**Implemented, pending sign-off.** Template IDs are stable because they appear in the selection URL. A template sets its photo count, layout and default frame and filter. The person's own edits override the defaults and never change the photo count or slot geometry.
+
+| Category | Templates (photos) |
+| --- | --- |
+| Photostrips | 2-cut strip (2), 3-cut strip (3), 4-cut strip (4), all vertical with landscape-leaning photos |
+| Single Photo | Portrait (1, 3:4), Square (1, 1:1), Instant film (1, square with a deep caption band, cream frame, vintage filter), Postcard (1, 3:2) |
+| Frames | Minimal white (3), Film noir (3, black frame, mono), Pastel duo (2, pink, pastel), Retro grid (4, 2 × 2, cream, vintage), Sky quad (4, 2 × 2, sky), Sage pair (2, side by side, sage, warm) |
+| Create Your Own | Blank with 1, 2, 3, 4 or 6 photos and the default white frame |
+
+Photo shapes are fixed per template; no template resizes its photos to fit the capture.
+
 ## First release: one complete local journey
 
 | Step | Expected behavior | Acceptance criteria to refine during implementation |
@@ -33,11 +46,11 @@ The selection screen should show category navigation, large previews with previo
 
 The table describes proposed behavior, not a promise that every control or visual treatment must ship at once. A vertical slice may start with one template, camera capture, and download, then broaden after the full path works. Whether file upload joins the first release remains open.
 
-**Implemented in the shell (provisional):** Capture or upload offers both camera and local upload. The camera starts only on request, the countdown is 3 seconds and runs once per photo, and the captured image is mirrored to match the preview. Upload accepts JPEG, PNG and WebP up to 15 MB. Both of these remain **Open** below. Customize offers frame/background colors, five filters and a caption of up to 30 characters; stickers and movable text are not built. Review shows the final composition with a shortcut back to editing. Export renders a PNG locally, 1200 px wide with the template's height, named `lumiora-<template-id>.png`; these values are provisional. No step sends photos anywhere.
+**Implemented in the shell (provisional):** Capture or upload offers both camera and local upload. The camera starts only on request, the countdown is 3 seconds and runs once per photo, and the captured image is mirrored to match the preview. Upload accepts JPEG, PNG and WebP up to 15 MB. Both of these remain **Open** below. Customize offers frame/background colors, five filters, a caption of up to 30 characters, six stickers and movable text. Stickers and text can be dragged, nudged with the keyboard, resized, rotated, recolored and removed, up to 20 items. Review shows the final composition with a shortcut back to editing. Export renders a PNG locally, 1200 px wide with the template's height, named `lumiora-<template-id>.png`; these values are provisional. No step sends photos anywhere.
 
 ## Later candidates
 
-- Stickers, movable text, more filters, and more layouts.
+- More stickers, text fonts, pinch-to-resize and rotate gestures, more filters, and more layouts.
 - Surprise-me selection and additional templates in each category.
 - Personal gallery and optional accounts.
 - Cloud storage, generated share links, and QR codes.
@@ -57,7 +70,7 @@ Gallery and sharing depend on product and privacy decisions in [Architecture](AR
 | Decision | Why it matters |
 | --- | --- |
 | Minimum supported browsers and devices | Sets the camera, download, and compatibility test matrix. |
-| Initial template catalog and photo count per template | Determines session state and export geometry. |
+| Whether the [first-release catalog](#first-release-template-catalog) is final | It is implemented and ready for review, but the product owner has not signed it off. |
 | Whether local upload ships with camera capture in the first release | Determines the source-choice UI and file validation work. |
 | Whether Surprise me chooses within the active category or across all categories | Determines how predictable the action feels. |
 | What happens when a template changes after photos exist | Avoids unexpected loss or mismatched slot counts. |

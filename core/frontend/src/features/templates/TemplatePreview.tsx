@@ -1,3 +1,5 @@
+import { CompositionPreview } from '../editor/CompositionPreview'
+import { defaultEdits } from '../editor/useEditSettings'
 import type { Template } from './catalog'
 
 interface Props {
@@ -7,25 +9,18 @@ interface Props {
   active?: boolean
 }
 
-// Placeholder rendering: a paper card with empty photo slots. Real previews come with template assets.
+const emptySlots = (count: number) => Array.from({ length: count }, () => null)
+
+// Draws the template with its own default frame and filter and empty photo slots.
 export function TemplatePreview({ template, heightRem, active = true }: Props) {
-  const rows = Math.ceil(template.photoCount / template.columns)
   return (
-    <div
-      aria-hidden="true"
-      className={`grid gap-2 rounded-sm bg-surface p-3 shadow-md ring-1 ring-line transition-opacity ${
-        active ? 'opacity-100' : 'opacity-50'
-      }`}
-      style={{
-        height: `${heightRem}rem`,
-        aspectRatio: String(template.aspect),
-        gridTemplateColumns: `repeat(${template.columns}, 1fr)`,
-        gridTemplateRows: `repeat(${rows}, 1fr)`,
-      }}
-    >
-      {Array.from({ length: template.photoCount }, (_, i) => (
-        <div key={i} className="rounded-[2px] bg-canvas ring-1 ring-line" />
-      ))}
+    <div aria-hidden="true" className={`transition-opacity ${active ? 'opacity-100' : 'opacity-50'}`}>
+      <CompositionPreview
+        template={template}
+        slots={emptySlots(template.photoCount)}
+        edits={defaultEdits}
+        height={`${heightRem}rem`}
+      />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 # Frontend implementation guide
 
-**Status: proposed.** Check the code before using any path below. The current frontend has a placeholder `App.tsx`; most named directories are empty.
+**Status: proposed.** Check the code before using any path below. The frontend implements the full local journey (see [UI shell](#ui-shell-implemented)); some directories from the structure below are still empty.
 
 ## Current setup
 
@@ -12,10 +12,15 @@ The shell follows the [UI](UI.md) journey. It starts on Choose look, has no land
 
 - `src/App.tsx` holds the journey step (`select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes.
 - `src/app/journey.ts` defines the five steps. `components/layout/` holds `AppHeader`, `StepIndicator` (earlier steps are clickable, later ones disabled) and `AppFooter`.
-- `features/templates/` holds the placeholder catalog (`catalog.ts`), the selection hook that reads and writes `/create?category=…&template=…` with `history.replaceState` and validates IDs with a fallback notice (`useTemplateSelection.ts`), the placeholder preview (`TemplatePreview.tsx`) and the Choose look screen (`ChooseLook.tsx`).
+- `features/templates/` holds:
+  - `catalog.ts`, the 18-template first-release catalog (see [Features](FEATURES.md#first-release-template-catalog)). Each template has its photo count, columns, a layout, a derived export aspect ratio and default frame and filter IDs.
+  - `layout.ts`, the layout proportions (padding, gap, caption band and font size as a percent of composition width) and `aspectFor`, which derives a template's aspect ratio from the photo shape. Previews and the export renderer both read these, so they stay in step.
+  - `useTemplateSelection.ts`, the selection hook that reads and writes `/create?category=…&template=…` with `history.replaceState` and validates IDs with a fallback notice.
+  - `TemplatePreview.tsx`, which draws a template with empty slots through `CompositionPreview`, so the preview shows its real geometry and default look.
+  - `ChooseLook.tsx`, the Choose look screen.
 - All five journey screens are implemented. The placeholder page was removed.
 - `features/editor/ReviewScreen.tsx` shows the final `CompositionPreview` with **Continue to export** and **Edit**.
-- `features/export/` implements Export. `ExportScreen.tsx` has the states `ready`, `exporting`, `downloaded` and `error`, with **Try again** on failure. `editor/renderComposition.ts` draws the PNG on a canvas from the original photos and the edits, using the same proportions as the preview (`editor/compositionLayout.ts`). `downloadBlob.ts` triggers the download. **Start over** releases every photo and resets the edits.
+- `features/export/` implements Export. `ExportScreen.tsx` has the states `ready`, `exporting`, `downloaded` and `error`, with **Try again** on failure. `editor/renderComposition.ts` draws the PNG on a canvas from the original photos and the edits, using the same proportions as the preview (`templates/layout.ts`). It also draws stickers and text. `downloadBlob.ts` triggers the download. **Start over** releases every photo and resets the edits.
 - Export checks that the browser's canvas really applies filters, because Safari accepts `ctx.filter` without applying it. If it does not, an export with a filter fails with a message instead of producing an image that differs from the preview.
 - Application UI tokens (colors, font, radius, focus ring, reduced motion) are in `src/index.css`. They are a first pass pending wireframe review.
 - `features/camera/` implements Capture or upload:
@@ -26,10 +31,13 @@ The shell follows the [UI](UI.md) journey. It starts on Choose look, has no land
   - `SlotStrip.tsx` shows the template geometry with photos. Selecting a slot targets it for retake or replace, and each filled slot has a remove button. `CaptureScreen.tsx` composes these, and **Continue** stays disabled until every slot is filled.
 - `features/editor/` implements Customize:
   - `presets.ts` holds the photo style presets (6 frame/background colors, 5 filters), kept apart from the app UI tokens. Filters are CSS filter strings so export can reuse them with canvas `ctx.filter`; this has not been checked in every target browser.
-  - `useEditSettings.ts` holds the edits as data (`frameId`, `filterId`, `caption`) for the whole session, separate from the template defaults. Edits apply to the original photos at render time.
+  - `useEditSettings.ts` holds the edits as data (`frameId`, `filterId`, `caption`, `overlays`) for the whole session. A null frame or filter means "use the template's default", so each template shows its own look until the person picks something. Edits apply to the original photos at render time.
+  - `overlays.ts` defines stickers and text. An item stores its center position as a fraction of the composition, its size as a percent of composition width, its rotation and its color, so the preview and the export arrange it the same way at any pixel size. The six stickers are original SVG path data in a 24 × 24 box. SVG draws them in the preview and canvas `Path2D` draws them in the export. Limits: 20 items, 24 characters of text.
+  - `OverlayLayer.tsx` renders items above the composition. When the Customize screen passes controls, an item can be selected, dragged with the pointer (touch included), nudged with the arrow keys (Shift for larger steps) and removed with Delete. Which item is selected is temporary UI state in `CustomizeScreen`, not part of the edit data. `OverlayPanel.tsx` adds stickers and text and edits the selected item's size, rotation, color and text.
   - `CompositionPreview.tsx` renders template geometry, photos, frame, filter and caption at the export aspect ratio, sized with container units so it scales without changing the ratio. A caption band is always reserved. It shows an alert if a photo fails to load. Review and Export should reuse it.
   - `CustomizeScreen.tsx` pairs the preview with controls built from `components/ui/ChoiceGroup.tsx` (native radio inputs) and a caption field, plus **Reset edits**.
-- The catalog is placeholder data. Create Your Own is three fixed blank templates (1, 2, 4 photos); Surprise me is not built.
+- Create Your Own is five fixed blank templates (1, 2, 3, 4 and 6 photos). Surprise me is not built.
+- Known limit: the text position in the export can differ from the preview by a pixel or two, because the browser and the canvas place text lines slightly differently.
 
 ## Suggested structure as features arrive
 

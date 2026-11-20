@@ -74,15 +74,9 @@ export function ChooseLook({ selection, onContinue }: Props) {
 
             <div className="flex items-center gap-8">
               {neighbours && options.length > 2 && (
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  aria-hidden="true"
-                  onClick={previous}
-                  className="hidden md:block"
-                >
+                <div onClick={previous} className="hidden cursor-pointer md:block">
                   <TemplatePreview template={prev} heightRem={14} active={false} />
-                </button>
+                </div>
               )}
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -96,15 +90,9 @@ export function ChooseLook({ selection, onContinue }: Props) {
                 </motion.div>
               </AnimatePresence>
               {neighbours && (
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  aria-hidden="true"
-                  onClick={next}
-                  className="hidden md:block"
-                >
+                <div onClick={next} className="hidden cursor-pointer md:block">
                   <TemplatePreview template={following} heightRem={14} active={false} />
-                </button>
+                </div>
               )}
             </div>
 
