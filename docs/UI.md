@@ -28,6 +28,8 @@ flowchart LR
 
 Use one clear primary action per screen and a persistent five-step progress indicator. Category choice and template browsing share the first screen; the progress steps are **Choose look**, **Capture or upload**, **Customize**, **Review**, and **Export**. Preserve progress when moving backward within a session. Ask for camera permission in context, after the person chooses camera capture. Provide a direct retry action when the browser allows it; otherwise explain how to enable the camera in browser settings. Upload and later sharing remain scope decisions in [Features](FEATURES.md).
 
+**Implemented progress treatment:** On wider screens, the five steps sit in equal-width tiles with the current step highlighted. On phones, all five numbered positions stay visible and a separate label names the current step. Completed steps can be used to move back; upcoming steps remain unavailable. A slim track shows how far the session has progressed.
+
 ## Choose look screen
 
 - Heading: **Choose your look.** Supporting copy: **Find a starting point. Make it yours later.**
@@ -51,6 +53,8 @@ The proposed URL is `/create?category=frames&template=minimal-white`. It identif
 - Check landscape orientation and small viewports before calling a screen complete.
 
 ## Visual foundations to explore
+
+The current shell uses a compact Lumiora wordmark and a simple light mark in the header and footer. The header gives a short local-processing cue; the footer explains that photos stay in the browser during creation and that a download is needed to keep the finished image. A keyboard skip link goes directly to the main screen. This is an implemented shell treatment, not final brand sign-off; the exact brand mark, colors, and typography remain **Open**.
 
 - Light, neutral UI surfaces with clear contrast for text and controls.
 - Clean typography, structured layouts, and subtle details that keep attention on the photos.
