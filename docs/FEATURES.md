@@ -41,12 +41,18 @@ Photo shapes are fixed per template; no template resizes its photos to fit the c
 | Choose look | Browse a category and select one template on the same screen. | The preview shows the required photo count; selection can change before capture; no sign-in or camera permission is required for browsing. |
 | Capture or upload | Fill the template's image slots from a live camera or local files, if both entry methods are included in the release. | Camera errors have recovery paths; uploaded files are validated; each slot can be filled or replaced. |
 | Customize | Pick a frame/background and apply a small set of visual treatments from different styles. | Edits appear in the preview and can be changed without recapturing; style choices are not tied to one theme. |
-| Review | Show the complete composition at its export aspect ratio. | The person can return to customization and see the exact result intended for export. |
-| Export | Render one image file locally for download. | The downloaded image has the selected template and edits; failure gives a retry path. |
+| Review | Show the complete composition at its export aspect ratio. | The person can return to customization and see the exact result intended for export; when motion exists, the composition clip matches the selected template and edits. |
+| Export | Render an image locally and, when at least one slot has motion, one composition clip. | The downloaded PNG has the selected template and edits; the video matches it and plays all available slot clips together. A failure in either output has its own retry path. |
 
 The table describes proposed behavior, not a promise that every control or visual treatment must ship at once. A vertical slice may start with one template, camera capture, and download, then broaden after the full path works. Whether file upload joins the first release remains open.
 
 **Implemented in the shell (provisional):** Capture or upload offers both camera and local upload. The camera starts only on request, the countdown is 3 seconds and runs once per photo, and the captured image is mirrored to match the preview. Upload accepts JPEG, PNG and WebP up to 15 MB. Both of these remain **Open** below. Customize offers frame/background colors, five filters, a caption of up to 30 characters, six stickers and movable text. Stickers and text can be dragged, nudged with the keyboard, resized, rotated, recolored and removed, up to 20 items. Review shows the final composition with a shortcut back to editing. Export renders a PNG locally, 1200 px wide with the template's height, named `ephemora-<template-id>.png`; the format and dimensions remain provisional. No step sends photos anywhere.
+
+**Implemented capture clips (browser verification pending):** Each camera capture keeps the still photo and pairs it with a silent three-second capture clip recorded during the existing countdown, ending when the photo is taken. The clip belongs to that photo slot. Local uploads remain still-only. If recording is unsupported or fails, a successful still photo still fills its slot; the app explains that the clip is unavailable and offers a retake. One composition clip represents the whole finished template, including all of its image slots, and is offered for download alongside the existing PNG when at least one slot has a capture clip. Its slots play simultaneously for roughly three seconds; uploaded and photo-only slots remain still. The composition clip uses the same frame, filter, caption, and stickers as the PNG.
+
+**Further clip behavior:** Each camera capture clip is mirrored in playback and composition export to match its still photo. Replacing or removing a slot's photo also removes its capture clip. Available clips autoplay and loop by default, with one visible Pause/Play control for the motion shown on each screen. When reduced motion is requested, show stills until the person presses Play. Clips stay in the same temporary browser session as photos and are lost on refresh or close unless downloaded. If composition video export fails, keep the PNG download available and offer a separate video retry. Target current Chrome, Edge, and Firefox on desktop, Chrome on Android, and Safari on iPhone, with photo-only fallback when recording is unavailable. The video uses a browser-supported MP4 or WebM format with the matching filename extension, and is 720 px wide at the template aspect ratio at about 30 fps. Device verification remains **Open**.
+
+If playback errors, stalls, or drops many frames, the preview shows stills and leaves Play available to try again. The captured clips and video export remain available; this fallback affects preview playback only.
 
 ## Later candidates
 
@@ -70,12 +76,12 @@ Gallery and sharing depend on product and privacy decisions in [Architecture](AR
 
 | Decision | Why it matters |
 | --- | --- |
-| Minimum supported browsers and devices | Sets the camera, download, and compatibility test matrix. |
+| Minimum browser versions and device verification | The intended desktop and mobile browser families are selected for capture clips, but their exact minimum versions and device test matrix remain open. |
 | Whether the [first-release catalog](#first-release-template-catalog) is final | It is implemented and ready for review, but the product owner has not signed it off. |
 | Whether local upload ships with camera capture in the first release | Determines the source-choice UI and file validation work. |
 | Whether Surprise me chooses within the active category or across all categories | Determines how predictable the action feels. |
 | What happens when a template changes after photos exist | Avoids unexpected loss or mismatched slot counts. |
-| Countdown length and whether it is configurable | Affects accessibility and session timing. |
-| Export format, dimensions, and filename | Determines visual quality and download behavior. |
+| Whether the three-second countdown is configurable | Affects accessibility and session timing; three seconds is chosen for capture clips. |
+| PNG export format, dimensions, and filename | The current PNG choice is still provisional; the composition video format and width are settled above. |
 | Whether editing survives refresh | Determines if local persistence is needed. |
 | Later gallery retention and deletion rules | Must be settled before any cloud storage is added. |

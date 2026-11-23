@@ -26,6 +26,12 @@ flowchart LR
 | Review | Final preview and back/continue actions | Ready, rendering error |
 | Export | Download action; later gallery and sharing actions if approved | Ready, exporting, export error, downloaded |
 
+**Implemented capture clip behavior:** Camera capture pairs the still photo in a slot with a silent clip of the three-second countdown. Uploaded photos have no capture clip. Filled camera slots loop their capture clips together on the Capture screen. Review loops one roughly three-second composition clip with all captured slots moving simultaneously and still-only slots remaining still. The composition clip matches the PNG's frame, filter, caption, and stickers. Export offers that clip alongside the PNG only when at least one slot has motion. If clip recording fails but the photo succeeds, show that the slot has a photo without a clip and offer a retake. The download controls are separate actions.
+
+**Further playback behavior:** Available motion autoplays and loops by default, with one visible Pause/Play control for all motion on the screen. When reduced motion is requested, show stills until Play is pressed. The capture clips mirror the camera view, and countdown numbers are not part of the saved video. If video export fails, the PNG remains downloadable and the person can retry video creation.
+
+On a playback error, sustained stall, or high dropped-frame rate, fall back to stills in that preview and leave Play available to retry. This does not remove the capture clips or the video export option.
+
 Use one clear primary action per screen and a persistent five-step progress indicator. Category choice and template browsing share the first screen; the progress steps are **Choose look**, **Capture or upload**, **Customize**, **Review**, and **Export**. Preserve progress when moving backward within a session. Ask for camera permission in context, after the person chooses camera capture. Provide a direct retry action when the browser allows it; otherwise explain how to enable the camera in browser settings. Upload and later sharing remain scope decisions in [Features](FEATURES.md).
 
 **Implemented progress treatment:** On wider screens, the five steps sit in equal-width tiles with the current step highlighted. On phones, all five numbered positions stay visible and a separate label names the current step. Completed steps can be used to move back; upcoming steps remain unavailable. A slim track shows how far the session has progressed.

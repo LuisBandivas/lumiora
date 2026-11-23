@@ -26,6 +26,14 @@ flowchart LR
 
 The browser owns the template selection, camera stream, any locally uploaded images, edits, rendering, and download. A session model tracks the selected template, captured or uploaded slots, and edit choices. Treat raw images as short-lived data; release camera tracks and object URLs when no longer needed. The upload path is proposed and still needs a release-scope decision.
 
+**Implemented capture clip boundary:** A camera-filled slot may pair its still photo with a silent countdown clip. An uploaded slot has a still photo only, and a camera slot may also lack a clip if recording fails. One composition clip represents all slots in the finished template and is downloaded separately from the PNG. Recording, playback, composition, and download stay in the browser. Capture clip URLs are released with their slot on replacement, removal, or session reset. Browser compatibility beyond the local Edge pass remains **Open**.
+
+Each capture clip mirrors its still. Replacing a slot replaces both its photo and any clip. A composition clip is generated only if at least one slot has motion. It runs the capture clips simultaneously for roughly three seconds, holds still-only slots static, and applies the same frame and edits as the PNG. The intended device scope includes current desktop Chrome, Edge, and Firefox, Android Chrome, and iPhone Safari; recording support and format must be verified on those targets before implementation is considered complete.
+
+Capture clips have the same temporary lifetime as session photos and are released on replacement or reset. Composition video is generated locally on demand for download; it is not persisted in the session. PNG export remains independent of video export so a video failure cannot prevent the still download.
+
+The composition video uses 720 px width at the template aspect ratio and about 30 fps. Browser capability detection chooses WebM where supported, then MP4, and uses the matching download extension. A claimed format may still fail during recording, so the photo-only and PNG-only recovery paths remain available.
+
 ## Boundaries
 
 | Boundary | Responsibility | Guideline |
