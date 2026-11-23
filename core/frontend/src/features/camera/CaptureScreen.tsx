@@ -6,6 +6,7 @@ import { SlotStrip } from './SlotStrip'
 import { UploadPanel } from './UploadPanel'
 import type { PhotoSession } from './usePhotoSession'
 import { navigateTabs } from '../../components/ui/tabNavigation'
+import { useMotionPlayback } from './useMotionPlayback'
 
 type Source = 'camera' | 'upload'
 
@@ -23,6 +24,7 @@ const sources: { id: Source; label: string }[] = [
 
 export function CaptureScreen({ template, session, onBack, onContinue }: Props) {
   const [source, setSource] = useState<Source>('camera')
+  const playback = useMotionPlayback()
   const targetLabel = `photo ${session.active + 1}`
   const remaining = template.photoCount - session.filled
 
@@ -64,7 +66,7 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
             {source === 'camera' ? (
               <CameraPanel
                 targetLabel={targetLabel}
-                onCapture={(url) => void session.place([url])}
+                onCapture={session.placeCapture}
                 onUseUpload={() => setSource('upload')}
               />
             ) : (
@@ -74,7 +76,13 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
         </div>
 
         <div className="flex min-w-0 flex-col items-center gap-3">
-          <SlotStrip template={template} session={session} />
+          <SlotStrip template={template} session={session} playing={playback.playing} onPlaybackFailure={playback.fail} />
+          {session.hasMotion && (
+            <button type="button" onClick={playback.toggle} className="rounded-full border border-line px-5 py-2 text-sm font-medium">
+              {playback.playing ? 'Pause clips' : 'Play clips'}
+            </button>
+          )}
+          {playback.failed && <p role="status" className="text-sm text-muted">Playback paused on this device. The clips are still saved; press Play to try again.</p>}
           <p className="text-sm text-muted" aria-live="polite">
             {session.filled} of {template.photoCount} photos
           </p>
@@ -82,7 +90,7 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
       </div>
 
       <p className="mx-auto mt-6 max-w-5xl px-4 text-center text-xs text-muted">
-        Photos stay in this browser tab and are lost if you refresh or close it.
+        Photos and clips stay in this browser tab and are lost if you refresh or close it.
       </p>
 
       <div className="sticky bottom-0 mt-6 border-t border-line bg-canvas/90 px-4 py-4 backdrop-blur sm:static sm:border-0 sm:bg-transparent">

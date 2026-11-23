@@ -2,14 +2,15 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { captureFrame } from './captureFrame'
 import { useCamera } from './useCamera'
+import { CLIP_SECONDS, playableClipUrl, startClip } from './recordClip'
 
-// Countdown length is an open decision (docs/FEATURES.md); 3 seconds for now.
-const COUNTDOWN_SECONDS = 3
+// Capture clips cover the full three-second countdown.
+const COUNTDOWN_SECONDS = CLIP_SECONDS
 
 interface Props {
   /** Which slot the next photo goes to, e.g. "photo 2". */
   targetLabel: string
-  onCapture: (url: string) => void
+  onCapture: (url: string, clipUrl: string | null) => void
   onUseUpload: () => void
 }
 
@@ -21,6 +22,13 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
   const [count, setCount] = useState<number | null>(null)
   const [capturing, setCapturing] = useState(false)
   const [captureError, setCaptureError] = useState(false)
+  const [clipError, setClipError] = useState(false)
+  const recordingRef = useRef<ReturnType<typeof startClip> | null>(null)
+
+  useEffect(() => () => {
+    recordingRef.current?.cancel()
+    recordingRef.current = null
+  }, [])
 
   // Keep the latest callback without restarting the countdown timer when the parent re-renders.
   const onCaptureRef = useRef(onCapture)
@@ -32,8 +40,15 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
     const video = videoRef.current
     if (!video) return
     setCapturing(true)
+    const recording = recordingRef.current
+    recordingRef.current = null
+    const clipResult = recording?.stop().catch(() => null)
     try {
-      onCaptureRef.current(await captureFrame(video, true))
+      const photoUrl = await captureFrame(video, true)
+      const clipBlob = await clipResult
+      const clipUrl = clipBlob ? await playableClipUrl(clipBlob) : null
+      onCaptureRef.current(photoUrl, clipUrl)
+      setClipError(!clipUrl)
       setCaptureError(false)
     } catch {
       setCaptureError(true)
@@ -64,6 +79,8 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
       ? `Taking ${targetLabel} in ${count}`
       : captureError
         ? 'That photo could not be captured. Try again.'
+        : clipError
+          ? 'Photo saved without a clip. Select that photo slot to retake it.'
         : ready
           ? `Camera ready. Next: ${targetLabel}.`
           : ''
@@ -110,7 +127,17 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
           <motion.button
             type="button"
             disabled={busy}
-            onClick={() => setCount(COUNTDOWN_SECONDS)}
+            onClick={() => {
+              const stream = videoRef.current?.srcObject
+              try {
+                recordingRef.current = stream instanceof MediaStream ? startClip(stream) : null
+                setClipError(!recordingRef.current)
+              } catch {
+                recordingRef.current = null
+                setClipError(true)
+              }
+              setCount(COUNTDOWN_SECONDS)
+            }}
             whileTap={{ scale: 0.96 }}
             className="rounded-full bg-accent px-8 py-3 font-medium text-accent-ink hover:opacity-90 disabled:opacity-40"
           >

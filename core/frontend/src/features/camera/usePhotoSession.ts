@@ -37,11 +37,16 @@ export function placePhotos(slots: Slots, active: number, urls: string[]) {
 // slot counts. How to migrate photos between templates remains an open decision (docs/FEATURES.md).
 export function usePhotoSession(template: Template) {
   const [store, setStore] = useState<Record<string, Slots>>({})
+  const [clipStore, setClipStore] = useState<Record<string, Slots>>({})
   const [activeRaw, setActive] = useState(0)
 
   const slots = useMemo<Slots>(
     () => store[template.id] ?? Array.from({ length: template.photoCount }, () => null),
     [store, template],
+  )
+  const clips = useMemo<Slots>(
+    () => clipStore[template.id] ?? Array.from({ length: template.photoCount }, () => null),
+    [clipStore, template],
   )
   const active = Math.min(activeRaw, template.photoCount - 1)
   const filled = slots.filter(Boolean).length
@@ -55,33 +60,65 @@ export function usePhotoSession(template: Template) {
   const place = (urls: string[]) => {
     const result = placePhotos(slots, active, urls)
     ;[...result.discarded, ...result.replaced].forEach((url) => URL.revokeObjectURL(url))
+    const nextClips = [...clips]
+    result.next.forEach((url, index) => {
+      if (url !== slots[index] && nextClips[index]) {
+        URL.revokeObjectURL(nextClips[index])
+        nextClips[index] = null
+      }
+    })
+    setClipStore((s) => ({ ...s, [template.id]: nextClips }))
     commit(result.next, result.nextActive)
     return result.placed
+  }
+
+  const placeCapture = (photoUrl: string, clipUrl: string | null) => {
+    const result = placePhotos(slots, active, [photoUrl])
+    ;[...result.discarded, ...result.replaced].forEach((url) => URL.revokeObjectURL(url))
+    if (!result.placed) {
+      if (clipUrl) URL.revokeObjectURL(clipUrl)
+      return
+    }
+    const nextClips = [...clips]
+    if (nextClips[active]) URL.revokeObjectURL(nextClips[active])
+    nextClips[active] = clipUrl
+    setClipStore((s) => ({ ...s, [template.id]: nextClips }))
+    commit(result.next, result.nextActive)
   }
 
   const remove = (index: number) => {
     const old = slots[index]
     if (old) URL.revokeObjectURL(old)
+    const oldClip = clips[index]
+    if (oldClip) URL.revokeObjectURL(oldClip)
     const next = [...slots]
     next[index] = null
+    const nextClips = [...clips]
+    nextClips[index] = null
+    setClipStore((s) => ({ ...s, [template.id]: nextClips }))
     commit(next, index)
   }
 
   /** Releases every photo in the session, for all templates. */
   const clearAll = () => {
     Object.values(store).forEach((list) => list.forEach((url) => url && URL.revokeObjectURL(url)))
+    Object.values(clipStore).forEach((list) => list.forEach((url) => url && URL.revokeObjectURL(url)))
     setStore({})
+    setClipStore({})
     setActive(0)
   }
 
   return {
     clearAll,
     slots,
+    clips,
+    hasMotion: clips.some(Boolean),
     active,
     filled,
     complete: filled === slots.length,
     select: setActive,
     place,
+    placeCapture,
     remove,
   }
 }

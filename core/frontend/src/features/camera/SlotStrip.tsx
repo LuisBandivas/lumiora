@@ -2,15 +2,18 @@ import { framePresets, placeholderBackground } from '../editor/presets'
 import type { Template } from '../templates/catalog'
 import { gridOf } from '../templates/layout'
 import type { PhotoSession } from './usePhotoSession'
+import { pauseOnDroppedFrames, pauseOnSustainedStall } from './useMotionPlayback'
 
 interface Props {
   template: Template
   session: PhotoSession
+  playing: boolean
+  onPlaybackFailure: () => void
 }
 
 // Shows the template's slots, laid out like the final composition, filled with local photos.
 // Selecting a slot targets it for retake or replace.
-export function SlotStrip({ template, session }: Props) {
+export function SlotStrip({ template, session, playing, onPlaybackFailure }: Props) {
   const { layout } = template
   const { columns, rows } = gridOf(template.columns, template.photoCount)
   const frame = framePresets.find((f) => f.id === template.defaults.frameId) ?? framePresets[0]
@@ -52,7 +55,23 @@ export function SlotStrip({ template, session }: Props) {
                   }`}
                   style={{ background: placeholderBackground(frame), color: frame.ink }}
                 >
-                  {url ? <img src={url} alt="" className="size-full object-cover" /> : <span>{i + 1}</span>}
+                  {url ? (
+                    playing && session.clips[i] ? (
+                      <video
+                        key={session.clips[i]}
+                        src={session.clips[i] ?? undefined}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        aria-hidden="true"
+                        onError={onPlaybackFailure}
+                        onStalled={(event) => pauseOnSustainedStall(event, onPlaybackFailure)}
+                        onTimeUpdate={(event) => pauseOnDroppedFrames(event, onPlaybackFailure)}
+                        className="size-full -scale-x-100 object-cover"
+                      />
+                    ) : <img src={url} alt="" className="size-full object-cover" />
+                  ) : <span>{i + 1}</span>}
                 </button>
                 {url && (
                   <button

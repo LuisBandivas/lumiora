@@ -4,10 +4,14 @@ import type { Template } from '../templates/catalog'
 import { OverlayLayer, type OverlayControls } from './OverlayLayer'
 import { placeholderBackground } from './presets'
 import { resolveEdits, type EditSettings } from './useEditSettings'
+import { pauseOnDroppedFrames, pauseOnSustainedStall } from '../camera/useMotionPlayback'
 
 interface Props {
   template: Template
   slots: (string | null)[]
+  clips?: (string | null)[]
+  playing?: boolean
+  onPlaybackFailure?: () => void
   edits: EditSettings
   /** CSS height of the preview; width follows the export aspect ratio. */
   height?: string
@@ -19,6 +23,9 @@ interface Props {
 export function CompositionPreview({
   template,
   slots,
+  clips,
+  playing = false,
+  onPlaybackFailure,
   edits,
   height = 'clamp(16rem, 55vh, 30rem)',
   overlayControls,
@@ -60,7 +67,22 @@ export function CompositionPreview({
           >
             {slots.map((url, i) => (
               <div key={i} className="min-h-0 overflow-hidden" style={{ background: placeholderBackground(frame) }}>
-                {url && (
+                {url && playing && clips?.[i] ? (
+                  <video
+                    key={clips[i]}
+                    src={clips[i] ?? undefined}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    aria-hidden="true"
+                    onError={onPlaybackFailure}
+                    onStalled={(event) => onPlaybackFailure && pauseOnSustainedStall(event, onPlaybackFailure)}
+                    onTimeUpdate={(event) => onPlaybackFailure && pauseOnDroppedFrames(event, onPlaybackFailure)}
+                    className="size-full -scale-x-100 object-cover"
+                    style={{ filter: filter.css }}
+                  />
+                ) : url && (
                   <img
                     src={url}
                     alt=""
