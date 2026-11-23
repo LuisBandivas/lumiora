@@ -20,10 +20,11 @@ export function ChooseLook({ selection, onContinue }: Props) {
   return (
     <section aria-labelledby="choose-heading" className="flex flex-1 flex-col">
       <div className="mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
-        <h1 id="choose-heading" className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Choose your look
+        <p className="mb-3 text-[0.65rem] uppercase tracking-[0.28em] text-muted">The little moments, made lasting</p>
+        <h1 id="choose-heading" className="text-4xl sm:text-5xl">
+          A moment to remember.
         </h1>
-        <p className="mt-2 text-muted">Find a starting point. Make it yours later.</p>
+        <p className="mt-3 text-muted">Choose a look for your photos, then make it yours.</p>
       </div>
 
       <div
@@ -63,6 +64,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
       )}
 
       <div role="tabpanel" id="template-panel" aria-labelledby={`category-${category}`} className="mx-auto mt-8 w-full max-w-5xl flex-1 px-4">
+        <div aria-hidden="true" className="mx-auto mb-8 flex max-w-xs items-center gap-3 text-champagne"><span className="h-px flex-1 bg-line" /><span className="font-editorial text-xl">✦</span><span className="h-px flex-1 bg-line" /></div>
         {options.length === 0 ? (
           <p className="py-16 text-center text-muted">No templates in this category yet.</p>
         ) : (

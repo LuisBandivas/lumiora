@@ -2,22 +2,41 @@
 
 /* Application UI tokens. Photo style presets live separately (see docs/FRONTEND.md). */
 @theme {
-  --color-surface: #ffffff;
-  --color-canvas: #f6f6f4;
-  --color-ink: #16161a;
-  --color-muted: #5b5b66;
-  --color-line: #e3e3de;
-  --color-accent: #2b2bd9;
-  --color-accent-ink: #ffffff;
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --radius-card: 0.75rem;
+  --color-surface: #faf6ee;
+  --color-canvas: #f8f2e8;
+  --color-ink: #33302d;
+  --color-muted: #776957;
+  --color-line: #d9cbb9;
+  --color-accent: #776957;
+  --color-accent-ink: #faf6ee;
+  --color-champagne: #b99b7b;
+  --color-sage: #a9a58f;
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --radius-card: 0.5rem;
 }
 
 body {
   margin: 0;
-  background: var(--color-canvas);
+  background: radial-gradient(ellipse at 50% 0%, #fffcf6 0%, var(--color-canvas) 62%);
   color: var(--color-ink);
   font-family: var(--font-sans);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.23'/%3E%3C/svg%3E");
+}
+
+h1, h2, .font-editorial {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.035em;
 }
 
 :focus-visible {

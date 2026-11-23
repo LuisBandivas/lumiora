@@ -1,20 +1,20 @@
-# Lumiora
+# Ephemora
 
-**Capture moments. Make them yours.**
+**Inspired by ephemeral moments.**
 
-Lumiora is a modern, web-based photo booth application that allows users to capture, customize, and share their favorite moments directly from their browser.
+Ephemora is a browser-based photo booth for capturing, customizing, and downloading favorite moments.
 
-Designed with a clean, minimal, and intuitive interface, Lumiora provides a flexible creative experience where users can personalize their photos according to their unique style.
+Its warm, album-inspired interface uses ivory, muted earthy tones, elegant serif type, and subtle film grain. People can still personalize the finished photo in their own style.
 
-Whether it's a simple monochrome photo strip, a cute pastel-themed design, or a nostalgic vintage look, Lumiora gives users the freedom to express themselves through customizable layouts, filters, frames, stickers, and other creative tools.
+Whether it's a simple monochrome photo strip, a cute pastel-themed design, or a nostalgic vintage look, Ephemora gives users the freedom to express themselves through customizable layouts, filters, frames, stickers, and other creative tools.
 
 ## Design Philosophy
 
-Lumiora follows three core design principles:
+Ephemora follows three core design principles:
 
 **Minimal by Design**
 
-A modern, light-themed interface with clean typography, structured layouts, subtle details, and distraction-free navigation.
+A warm ivory interface with serif headings, structured layouts, subtle vintage details, and distraction-free navigation.
 
 **Creative by Choice**
 
@@ -90,7 +90,7 @@ The proposed photo booth workflow is:
 The current top-level structure is:
 
 ```text
-lumiora/
+ephemora/
 ├── core/
 │   ├── frontend/           # Vite/React starter and package.json
 │   └── backend/            # Reserved for a possible backend
@@ -163,7 +163,7 @@ Camera access requires user permission and a secure browser context, such as HTT
 
 ## Privacy and Security
 
-Lumiora aims to provide a privacy-conscious photo booth experience.
+Ephemora aims to provide a privacy-conscious photo booth experience.
 
 Photos will be processed locally whenever possible. Cloud storage and sharing will require explicit user action.
 
@@ -177,7 +177,7 @@ The complete local photo journey is implemented. Browser support, release scope 
 
 ## Contributing
 
-Lumiora is currently a personal development project.
+Ephemora is currently a personal development project.
 
 Contribution guidelines may be introduced in the future.
 
@@ -189,4 +189,4 @@ Until a license is added, no permission to use, modify, or distribute the source
 
 ---
 
-**Lumiora** — A little space for your favorite moments.
+**Ephemora** — A little space for your favorite moments.

@@ -21,7 +21,7 @@ interface Props {
 export function ExportScreen({ template, photos, edits, onBack, onStartOver }: Props) {
   const [status, setStatus] = useState<Status>('ready')
   const [message, setMessage] = useState('')
-  const filename = `lumiora-${template.id}.png`
+  const filename = `ephemora-${template.id}.png`
 
   const download = async () => {
     setStatus('exporting')

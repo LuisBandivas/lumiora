@@ -1,4 +1,4 @@
-# Lumiora planning documents
+# Ephemora planning documents
 
 **Status: working drafts.** These documents organize the current idea so development can start in small, reviewable steps. They are not a final product specification. The root [README](../README.md) is the project introduction; the files below hold working decisions and open questions.
 

@@ -1,6 +1,6 @@
-# Lumiora frontend
+# Ephemora frontend
 
-This is Lumiora's Vite, React, TypeScript, and Tailwind frontend. It implements template selection, local camera capture and upload, customization, review, and PNG download. Product decisions and remaining open choices are in [the planning documents](../../docs/README.md).
+This is Ephemora's Vite, React, TypeScript, and Tailwind frontend. It implements template selection, local camera capture and upload, customization, review, and PNG download. Product decisions and remaining open choices are in [the planning documents](../../docs/README.md).
 
 ## Local development
 

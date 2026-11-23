@@ -1,6 +1,6 @@
 # UI and interaction direction
 
-**Status: working draft.** The current app implements the five-step local journey, from template selection through capture/upload, customization, review and PNG export (see [Frontend](FRONTEND.md#ui-shell-implemented)). Release scope and visual foundations remain provisional. The [design philosophy](../README.md#design-philosophy) sets a modern, sharp, light-themed interface and leaves the style of each person's photo output open to creative choice. [RollBooth's selection page](https://rollbooth.com/layout?tab=frames) is a reference for category-led browsing and a clear next action; Lumiora's visual language and assets should be its own.
+**Status: working draft.** The current app implements the five-step local journey, from template selection through capture/upload, customization, review and PNG export (see [Frontend](FRONTEND.md#ui-shell-implemented)). Release scope remains provisional. Ephemora's approved application identity is inspired by ephemeral moments and the feeling of an old photo album. Photo output remains open to each person's creative choices.
 
 ## Main journey
 
@@ -32,7 +32,7 @@ Use one clear primary action per screen and a persistent five-step progress indi
 
 ## Choose look screen
 
-- Heading: **Choose your look.** Supporting copy: **Find a starting point. Make it yours later.**
+- Heading: **A moment to remember.** Supporting copy: **Choose a look for your photos, then make it yours.**
 - Top-level categories: **Photostrips**, **Single Photo**, **Frames**, **Create Your Own**. Use segmented tabs or another equally clear control; show which category is active.
 - Show a large active template preview with previous/next controls, position such as `1 / 3`, template name, and a plain-language photo-count label. Neighbouring previews may be visible on desktop.
 - Make the active template visually clear and provide **Continue with this** as the primary action. A selected template is a starting point; editor controls can change supported visual properties later.
@@ -54,15 +54,17 @@ The proposed URL is `/create?category=frames&template=minimal-white`. It identif
 
 ## Visual foundations to explore
 
-The current shell uses a compact Lumiora wordmark and a simple light mark in the header and footer. The header gives a short local-processing cue; the footer explains that photos stay in the browser during creation and that a download is needed to keep the finished image. A keyboard skip link goes directly to the main screen. This is an implemented shell treatment, not final brand sign-off; the exact brand mark, colors, and typography remain **Open**.
+The shell uses an Ephemora wordmark and a small photo-frame mark. The header gives a short local-processing cue; the footer explains that photos stay in the browser during creation and that a download is needed to keep the finished image. A keyboard skip link goes directly to the main screen.
 
-- Light, neutral UI surfaces with clear contrast for text and controls.
-- Clean typography, structured layouts, and subtle details that keep attention on the photos.
+**Chosen brand direction:** the lighter vintage ivory canvas `#F8F2E8` is adapted from the original `#F3EBDD` palette; champagne `#B99B7B` supplies small decorative details; mocha `#776957` is used for secondary text and primary actions; dusty beige `#D9CBB9` defines borders; soft charcoal `#33302D` anchors high-contrast text. Sage mist `#A9A58F` is an optional quiet accent. Serif display typography, warm light, subtle grain and restrained album details set the mood. The grain belongs to the app shell and does not alter captured or exported photos. Browser-native serif and sans-serif stacks avoid a font download.
+
+- Warm ivory UI surfaces with clear contrast for text and controls.
+- Elegant serif headings, structured layouts, and subtle album details that keep attention on the photos.
 - Style choices such as monochrome, pastel, and vintage belong to the photo customization tools; the application shell should support all of them.
 - Consistent spacing and type scale, with readable labels before decorative typography.
 - Motion can make the countdown and screen changes feel playful; respect reduced motion settings.
 
-Create actual color, type, spacing, radius, and focus tokens after the first wireframes are reviewed. Record chosen tokens in the frontend styles rather than treating examples in this draft as fixed values. The shell's first-pass tokens in `core/frontend/src/index.css` are provisional.
+The chosen color and type tokens live in `core/frontend/src/index.css`. Spacing, radius and focus treatment can be refined after desktop and mobile visual review.
 
 ## Accessibility review for every screen
 
@@ -76,14 +78,14 @@ Create actual color, type, spacing, radius, and focus tokens after the first wir
 
 ## Open design questions
 
-- Brand mark, exact UI colors, fonts, illustrations, and icon style.
+- Whether the current original frame mark needs refinement after visual review.
 - Initial photo style presets and how users can mix their elements.
 - Whether the implemented 18-template catalog is final (see [Features](FEATURES.md#first-release-template-catalog)). Each preview is the template drawn with its default frame and filter and empty slots.
-- Whether the five-step indicator includes a separate landing page or begins on Choose look; the current proposal and the shell begin on Choose look. RollBooth uses a landing page with a mode picker; Lumiora has not adopted one.
+- Whether the five-step indicator includes a separate landing page or begins on Choose look; the current proposal and the shell begin on Choose look.
 - Whether Surprise me selects within the current category or all templates.
 - Whether capture is automatic after countdown or initiated for each slot. The shell starts the countdown for each photo on request and moves to the next empty slot afterward.
 - Whether the phone editing layout (below) needs more than three tabs once more editing tools exist. The current layout keeps the preview in view while any control is adjusted.
 
 ## Next design deliverable
 
-Create high-fidelity **desktop and mobile mockups for Choose look**, including an active Photostrips template, a Frames template, Create Your Own, an invalid or empty selection state, and the sticky mobile action. Then design the Capture or upload screen with permission, ready, filled-slot, and recovery states. Use original Lumiora typography, colors, and preview assets.
+Review **desktop and mobile Choose look** with the Ephemora palette, including an active Photostrips template, a Frames template, Create Your Own, an invalid or empty selection state, and the sticky mobile action. Then design the Capture or upload screen with permission, ready, filled-slot, and recovery states.
