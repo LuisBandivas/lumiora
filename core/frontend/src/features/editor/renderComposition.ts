@@ -1,11 +1,8 @@
 import type { Template } from '../templates/catalog'
-import { compositionGeometry } from '../templates/layout'
-import { PLACEHOLDER_ALPHA } from './presets'
-import { findSticker, type OverlayItem } from './overlays'
+import { drawCompositionFrame } from './drawCompositionFrame'
 import { resolveEdits, type EditSettings } from './useEditSettings'
 
 export const EXPORT_WIDTH = 1200
-
 export const exportHeight = (template: Template) => Math.round(EXPORT_WIDTH / template.aspect)
 
 export class FilterUnsupportedError extends Error {
@@ -30,51 +27,20 @@ function supportsCanvasFilter() {
   return (filterSupport = r === g && g === b)
 }
 
-function loadImage(url: string) {
+export function assertCanvasFilter(template: Template, edits: EditSettings) {
+  const { filter } = resolveEdits(edits, template)
+  if (filter.css !== 'none' && !supportsCanvasFilter()) throw new FilterUnsupportedError(filter.label)
+}
+
+export function loadImage(url: string) {
   const image = new Image()
   image.src = url
   return image.decode().then(() => image)
 }
 
-function drawOverlay(
-  context: CanvasRenderingContext2D,
-  item: OverlayItem,
-  width: number,
-  height: number,
-  fontFamily: string,
-) {
-  const unit = width / 100
-  context.save()
-  context.filter = 'none'
-  context.translate(item.x * width, item.y * height)
-  context.rotate((item.rotation * Math.PI) / 180)
-  context.fillStyle = item.color
-  if (item.kind === 'sticker') {
-    const sticker = findSticker(item.stickerId)
-    if (sticker) {
-      const scale = (item.size * unit) / 24
-      context.scale(scale, scale)
-      context.translate(-12, -12)
-      context.fill(new Path2D(sticker.path), sticker.evenodd ? 'evenodd' : 'nonzero')
-    }
-  } else {
-    context.textAlign = 'center'
-    context.textBaseline = 'middle'
-    context.font = `600 ${item.size * unit}px ${fontFamily}`
-    context.fillText(item.text, 0, 0)
-  }
-  context.restore()
-}
-
-/** Renders the composition to a PNG from the original photos and edit choices. Runs in the browser. */
-export async function renderComposition(
-  template: Template,
-  slots: (string | null)[],
-  edits: EditSettings,
-): Promise<Blob> {
-  const { frame, filter, caption, overlays } = resolveEdits(edits, template)
-  if (filter.css !== 'none' && !supportsCanvasFilter()) throw new FilterUnsupportedError(filter.label)
-
+/** Renders the composition to a PNG from the original photos and edit choices. */
+export async function renderComposition(template: Template, slots: (string | null)[], edits: EditSettings): Promise<Blob> {
+  assertCanvasFilter(template, edits)
   const width = EXPORT_WIDTH
   const height = exportHeight(template)
   const canvas = document.createElement('canvas')
@@ -82,62 +48,8 @@ export async function renderComposition(
   canvas.height = height
   const context = canvas.getContext('2d')
   if (!context) throw new Error('Canvas is unavailable')
-
-  context.fillStyle = frame.background
-  context.fillRect(0, 0, width, height)
-
-  // Same arithmetic as the CSS grid in CompositionPreview.
-  const { layout } = template
-  const { unit, padding, gap, captionHeight, columns, gridWidth, cellWidth, cellHeight } =
-    compositionGeometry(template, width, height)
-  const fontFamily = getComputedStyle(document.body).fontFamily
-
   const images = await Promise.all(slots.map((url) => (url ? loadImage(url) : null)))
-  images.forEach((image, i) => {
-    const x = padding + (i % columns) * (cellWidth + gap)
-    const y = padding + Math.floor(i / columns) * (cellHeight + gap)
-    if (!image) {
-      context.filter = 'none'
-      context.globalAlpha = PLACEHOLDER_ALPHA
-      context.fillStyle = frame.ink
-      context.fillRect(x, y, cellWidth, cellHeight)
-      context.globalAlpha = 1
-      return
-    }
-    // Equivalent of object-fit: cover.
-    const scale = Math.max(cellWidth / image.naturalWidth, cellHeight / image.naturalHeight)
-    const sourceWidth = cellWidth / scale
-    const sourceHeight = cellHeight / scale
-    context.filter = filter.css
-    context.drawImage(
-      image,
-      (image.naturalWidth - sourceWidth) / 2,
-      (image.naturalHeight - sourceHeight) / 2,
-      sourceWidth,
-      sourceHeight,
-      x,
-      y,
-      cellWidth,
-      cellHeight,
-    )
-  })
-
-  if (caption) {
-    context.filter = 'none'
-    context.fillStyle = frame.ink
-    context.textAlign = 'center'
-    context.textBaseline = 'middle'
-    context.font = `500 ${layout.captionFont * unit}px ${fontFamily}`
-    let text = caption
-    while (text.length > 1 && context.measureText(text).width > gridWidth) {
-      text = `${text.slice(0, -2)}…`
-    }
-    context.fillText(text, width / 2, height - padding - captionHeight / 2)
-  }
-
-  // Stickers and text sit above photos and caption, in the order they were added.
-  overlays.forEach((item) => drawOverlay(context, item, width, height, fontFamily))
-
+  drawCompositionFrame(context, template, images, edits, width, height)
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('Could not encode the image'))), 'image/png')
   })
