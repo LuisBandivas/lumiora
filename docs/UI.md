@@ -4,6 +4,8 @@
 
 ## Main journey
 
+**Authentication UI preview:** `/login` presents an email/password form and `/signup` collects first name, last name, username, valid email, and password. Both offer Google sign-in as a visual-only action that announces authentication is not connected; the main photo journey remains account-free. Whether accounts and Google sign-in belong in a release remains **Open**.
+
 ```mermaid
 flowchart LR
   Select[1 Choose look: category and template] --> Source[2 Capture or upload]

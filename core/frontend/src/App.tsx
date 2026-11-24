@@ -12,6 +12,7 @@ import { ChooseLook } from './features/templates/ChooseLook'
 import { useTemplateSelection } from './features/templates/useTemplateSelection'
 import { ReviewScreen } from './features/editor/ReviewScreen'
 import { ExportScreen } from './features/export/ExportScreen'
+import { LoginScreen } from './features/auth/LoginScreen'
 
 function App() {
   const [step, setStep] = useState<JourneyStep>('select')
@@ -35,6 +36,11 @@ function App() {
 
   const index = stepIndex(step)
   const go =(delta: number) => setStep(steps[index + delta].id)
+
+  if (window.location.pathname === '/login' || window.location.pathname === '/signup') {
+    const mode = window.location.pathname === '/signup' ? 'signup' : 'login'
+    return <MotionConfig reducedMotion="user"><div className="flex min-h-screen flex-col"><LoginScreen mode={mode} /></div></MotionConfig>
+  }
 
   return (
     <MotionConfig reducedMotion="user">
