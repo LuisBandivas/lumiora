@@ -105,7 +105,7 @@ export const createText = (color: string, count: number): OverlayItem => ({
   id: nextId(),
   kind: 'text',
   text: 'Your text',
-  fontId: 'serif',
+  fontId: 'default',
   ...spot(count),
   size: 8,
   rotation: 0,

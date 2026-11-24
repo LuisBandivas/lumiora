@@ -5,10 +5,12 @@ export interface FontPreset {
 }
 
 export const fontPresets: FontPreset[] = [
-  { id: 'serif', label: 'Classic serif', css: 'Georgia, "Times New Roman", serif' },
-  { id: 'sans', label: 'Clean sans serif', css: '"Segoe UI", Arial, sans-serif' },
-  { id: 'handwriting', label: 'Handwriting', css: '"Comic Sans MS", "Segoe Print", cursive' },
+  { id: 'default', label: 'Original', css: 'Georgia, "Times New Roman", serif' },
+  { id: 'cormorant', label: 'Classic serif', css: '"Ephemora Cormorant", Georgia, serif' },
+  { id: 'sans', label: 'Clean sans serif', css: '"Ephemora Inter", sans-serif' },
+  { id: 'handwriting', label: 'Handwriting', css: '"Ephemora Caveat", cursive' },
 ]
 
 export const fontFamilyFor = (id: string | null | undefined) =>
-  fontPresets.find((font) => font.id === id)?.css ?? fontPresets[0].css
+  id === 'default' || !id ? 'Georgia, "Times New Roman", serif' :
+    fontPresets.find((font) => font.id === id)?.css ?? fontPresets[0].css

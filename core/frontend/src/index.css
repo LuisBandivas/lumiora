@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@font-face { font-family: "Ephemora Cormorant"; src: url("/fonts/CormorantGaramond.ttf") format("truetype"); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: "Ephemora Inter"; src: url("/fonts/Inter.ttf") format("truetype"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Ephemora Caveat"; src: url("/fonts/Caveat.ttf") format("truetype"); font-weight: 400 700; font-display: swap; }
+
 /* Application UI tokens. Photo style presets live separately (see docs/FRONTEND.md). */
 @theme {
   --color-surface: #faf6ee;

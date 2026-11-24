@@ -16,7 +16,7 @@ export interface EditSettings {
   overlays: OverlayItem[]
 }
 
-export const defaultEdits: EditSettings = { frameId: null, filterId: null, caption: '', captionFontId: 'serif', overlays: [] }
+export const defaultEdits: EditSettings = { frameId: null, filterId: null, caption: '', captionFontId: 'default', overlays: [] }
 
 export const resolveEdits = (settings: EditSettings, template: Template) => ({
   frame:
@@ -47,7 +47,7 @@ export function useEditSettings() {
       settings.frameId === null &&
       settings.filterId === null &&
       settings.caption === '' &&
-      settings.captionFontId === 'serif' &&
+      settings.captionFontId === 'default' &&
       settings.overlays.length === 0,
   }
 }
