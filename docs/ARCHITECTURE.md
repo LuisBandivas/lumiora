@@ -4,9 +4,9 @@
 
 ## Current repository
 
-- `core/frontend` contains a Vite, React, TypeScript, and Tailwind starter. The frontend implements the local journey (choose, capture or upload, customize, review, export) entirely in the browser, with no backend calls.
-- `core/backend`, `supabase`, and `test` are present as empty planning directories.
-- Supabase and Vercel appear in the root README as planned technologies; neither is an integrated service here.
+- `core/frontend` contains the Vite, React, TypeScript, and Tailwind application. The photo journey remains browser-local; Supabase Auth is used only for optional account sign-in.
+- `core/backend` is reserved for future trusted server-side operations. Browser auth configuration and calls belong in `core/frontend` because Vite compiles that app and exposes only the Supabase publishable key.
+- The frontend stores the Supabase session through the Supabase client. Never put a service-role key in a `VITE_` variable or browser bundle.
 
 ## Proposed first-release boundary
 
@@ -54,6 +54,12 @@ The first release should process photos locally. Camera permission is browser-co
 
 Do not put service credentials in client code. Public client configuration, if later needed, belongs in environment variables with a checked-in example file; secrets belong in the service environment.
 
+## Authentication boundary
+
+Supabase Auth is an optional identity layer. The current frontend supports email/password signup and sign-in plus Google OAuth. Signup metadata includes first name, last name, and username; account profile persistence and username uniqueness are not implemented. OAuth and email confirmation return to `/login`, then authenticated users continue to the local photo journey. The photo journey remains available without an account, and photos are not sent to Supabase.
+
+The frontend reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` from `core/frontend/.env.local`. Keep `.env.local` ignored and commit only `.env.example`. Configure the Supabase Site URL and allowed redirect URLs for each deployment, and configure Google's OAuth callback to the Supabase project's `/auth/v1/callback` endpoint. The Supabase publishable key is intended for browser use; a service-role key is not.
+
 ## Future service boundary
 
 An optional account/gallery/sharing phase may add authentication, database metadata, and image storage. Keep the client-facing operations explicit, such as `saveStrip`, `listStrips`, and `deleteStrip`, so the browser-only flow does not depend on cloud availability. Storage permissions and share-link lifetime need a separate decision before implementation.
@@ -61,6 +67,7 @@ An optional account/gallery/sharing phase may add authentication, database metad
 ## Open decisions
 
 - Whether the project needs a custom backend or only managed services for later features.
+- Whether enterprise SSO (such as SAML) is needed; the current Google OAuth integration is social login, not enterprise SSO.
 - Image representation during editing and maximum in-memory image size.
 - Whether local draft persistence is useful, and its privacy implications.
 - Cloud image retention, access control, link expiry, and deletion semantics.

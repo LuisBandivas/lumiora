@@ -69,7 +69,7 @@ The starter in `core/frontend` currently uses React, TypeScript, Vite, and Tailw
 | React, TypeScript, Vite, Tailwind CSS | Installed frontend starter |
 | HTML Canvas API, MediaDevices API | Implemented local capture and PNG export |
 | Zustand | Possible state management if needed |
-| Supabase | Possible later authentication, database, and storage |
+| Supabase Auth | Optional email/password and Google sign-in in the frontend; no photo storage |
 | Vercel | Possible deployment and hosting |
 | Figma | Possible UI/UX design and prototyping |
 
@@ -148,7 +148,7 @@ Camera access requires user permission and a secure browser context, such as HTT
 - [x] Implement image exporting and downloading
 
 ### Phase 4 — Gallery and Sharing
-- [ ] Implement optional authentication
+- [x] Implement optional authentication (email/password and Google OAuth)
 - [ ] Create personal photo gallery
 - [ ] Integrate secure image storage
 - [ ] Implement photo sharing links
@@ -171,9 +171,9 @@ Planned privacy measures include secure photo storage, controlled gallery access
 
 ## Project Status
 
-**Local prototype implemented; release scope and design under review**
+**Local prototype and optional Supabase Auth implemented; release scope and design under review**
 
-The complete local photo journey is implemented. Browser support, release scope and visual design still need review; cloud features are not implemented.
+The complete local photo journey and optional email/Google authentication are implemented. Browser support, release scope and visual design still need review; photo gallery, cloud storage and sharing are not implemented.
 
 ## Contributing
 

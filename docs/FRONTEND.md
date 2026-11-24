@@ -19,7 +19,7 @@ The shell follows the [UI](UI.md) journey. It starts on Choose look, has no land
   - `TemplatePreview.tsx`, which draws a template with empty slots through `CompositionPreview`, so the preview shows its real geometry and default look.
   - `ChooseLook.tsx`, the Choose look screen.
 - All five journey screens are implemented. The placeholder page was removed.
-- `features/auth/LoginScreen.tsx` provides visual-only login and signup previews at `/login` and `/signup`. Signup collects name, username, email, and password; both screens offer a Google sign-in placeholder. No authentication provider or account behavior is connected.
+- `features/auth/AuthProvider.tsx` owns the optional Supabase Auth session and exposes email/password, signup, Google OAuth, and sign-out operations to the login screens and app header. `lib/supabase.ts` creates the browser client from the frontend's public Vite environment variables. Auth does not gate the photo journey or upload photos.
 - `features/editor/ReviewScreen.tsx` shows the final `CompositionPreview` with **Continue to export** and **Edit**.
 - `features/export/` implements Export. `ExportScreen.tsx` has the states `ready`, `exporting`, `downloaded` and `error`, with **Try again** on failure. `editor/renderComposition.ts` draws the PNG on a canvas from the original photos and the edits, using the same proportions as the preview (`templates/layout.ts`). It also draws stickers and text. `downloadBlob.ts` triggers the download. **Start over** releases every photo and resets the edits.
 - Export checks that the browser's canvas really applies filters, because Safari accepts `ctx.filter` without applying it. If it does not, an export with a filter fails with a message instead of producing an image that differs from the preview.
@@ -95,7 +95,7 @@ Tailwind is installed. Introduce design tokens for the minimal, light-themed app
 
 ## Environment
 
-Use Vite client environment variables only for values safe to expose in a built browser bundle. Keep `core/frontend/.env.example` as a list of required names once integration needs them; it is currently empty. The local-only first release should not require cloud credentials.
+Use Vite client environment variables only for values safe to expose in a built browser bundle. `core/frontend/.env.example` lists the Supabase URL and publishable key names. Keep real values in the ignored `core/frontend/.env.local`; never put a service-role key in a Vite variable. The photo journey still works without cloud credentials.
 
 ## Open choices
 

@@ -25,4 +25,4 @@ npm test
 
 ## Environment
 
-The local starter does not require environment variables. `.env.example` is present for future public client configuration. Never put private service credentials in Vite client variables.
+Supabase Auth reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` from `.env.local`; copy the names from `.env.example`. The optional account flow requires these public client values, but the local photo journey still works without them. Never put private service credentials, including a service-role key, in Vite client variables.

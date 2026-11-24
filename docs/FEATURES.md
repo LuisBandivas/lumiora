@@ -60,7 +60,7 @@ If playback errors, stalls, or drops many frames, the preview shows stills and l
 
 - More stickers, pinch-to-resize and rotate gestures, more filters, and more layouts.
 - Surprise-me selection and additional templates in each category.
-- Personal gallery and optional accounts.
+- Personal gallery and account-backed profile data. Optional Supabase Auth is implemented for email/password and Google login; it does not gate the photo journey or store photos.
 - Cloud storage, generated share links, and QR codes.
 
 Gallery and sharing depend on product and privacy decisions in [Architecture](ARCHITECTURE.md). Local file upload can be added independently because it need not send photographs to a server.

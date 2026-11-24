@@ -4,7 +4,7 @@
 
 ## Main journey
 
-**Authentication UI preview:** `/login` presents an email/password form and `/signup` collects first name, last name, username, valid email, and password. Both offer Google sign-in as a visual-only action that announces authentication is not connected; the main photo journey remains account-free. Whether accounts and Google sign-in belong in a release remains **Open**.
+**Authentication:** `/login` presents working email/password sign-in and Google OAuth. `/signup` collects first name, last name, username, email, and password; when email confirmation is enabled, it tells the person to check their inbox. Authenticated users can sign out from the app header. Sign-in is optional and does not gate the browser-local photo journey. Enterprise SSO remains **Open**.
 
 ```mermaid
 flowchart LR
