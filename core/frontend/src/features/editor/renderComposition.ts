@@ -40,6 +40,7 @@ export function loadImage(url: string) {
 
 /** Renders the composition to a PNG from the original photos and edit choices. */
 export async function renderComposition(template: Template, slots: (string | null)[], edits: EditSettings): Promise<Blob> {
+  await document.fonts.ready
   assertCanvasFilter(template, edits)
   const width = EXPORT_WIDTH
   const height = exportHeight(template)

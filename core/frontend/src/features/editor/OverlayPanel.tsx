@@ -11,6 +11,7 @@ import {
   type OverlayItem,
 } from './overlays'
 import type { EditSession } from './useEditSettings'
+import { fontPresets } from './fonts'
 
 interface Props {
   edits: EditSession
@@ -90,6 +91,9 @@ export function OverlayPanel({ edits, textColor, selected, onSelect }: Props) {
                 onChange={(e) => updateOverlay(selected.id, { text: e.target.value })}
                 className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm"
               />
+              <ChoiceGroup legend="Text font" name="overlay-font" value={selected.fontId ?? 'serif'}
+                choices={fontPresets.map((font) => ({ id: font.id, label: font.label }))}
+                onChange={(fontId) => updateOverlay(selected.id, { fontId })} />
             </div>
           )}
 

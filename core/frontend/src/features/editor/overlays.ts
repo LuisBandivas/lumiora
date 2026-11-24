@@ -75,9 +75,9 @@ type Base = {
   color: string
 }
 
-export type OverlayItem = Base & ({ kind: 'sticker'; stickerId: string } | { kind: 'text'; text: string })
+export type OverlayItem = Base & ({ kind: 'sticker'; stickerId: string } | { kind: 'text'; text: string; fontId: string })
 
-export type OverlayPatch = Partial<Pick<Base, 'x' | 'y' | 'size' | 'rotation' | 'color'> & { text: string }>
+export type OverlayPatch = Partial<Pick<Base, 'x' | 'y' | 'size' | 'rotation' | 'color'> & { text: string; fontId: string }>
 
 export const SIZE_RANGE = { sticker: { min: 8, max: 60 }, text: { min: 4, max: 16 } } as const
 export const TEXT_MAX_LENGTH = 24
@@ -105,6 +105,7 @@ export const createText = (color: string, count: number): OverlayItem => ({
   id: nextId(),
   kind: 'text',
   text: 'Your text',
+  fontId: 'serif',
   ...spot(count),
   size: 8,
   rotation: 0,

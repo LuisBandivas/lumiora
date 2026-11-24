@@ -8,6 +8,7 @@ import { CompositionPreview } from './CompositionPreview'
 import { OverlayPanel } from './OverlayPanel'
 import { CAPTION_MAX_LENGTH, filterPresets, framePresets } from './presets'
 import { resolveEdits, type EditSession } from './useEditSettings'
+import { fontPresets } from './fonts'
 
 interface Props {
   template: Template
@@ -150,6 +151,9 @@ export function CustomizeScreen({ template, photos, edits, onBack, onContinue }:
               <p className="mt-1 text-xs text-muted">
                 {settings.caption.length} / {CAPTION_MAX_LENGTH}
               </p>
+              <ChoiceGroup legend="Caption font" name="caption-font" value={settings.captionFontId}
+                choices={fontPresets.map((font) => ({ id: font.id, label: font.label }))}
+                onChange={(captionFontId) => update({ captionFontId })} />
             </div>
           </div>
 

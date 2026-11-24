@@ -12,10 +12,11 @@ export interface EditSettings {
   frameId: string | null
   filterId: string | null
   caption: string
+  captionFontId: string
   overlays: OverlayItem[]
 }
 
-export const defaultEdits: EditSettings = { frameId: null, filterId: null, caption: '', overlays: [] }
+export const defaultEdits: EditSettings = { frameId: null, filterId: null, caption: '', captionFontId: 'serif', overlays: [] }
 
 export const resolveEdits = (settings: EditSettings, template: Template) => ({
   frame:
@@ -31,7 +32,7 @@ export function useEditSettings() {
   const [settings, setSettings] = useState<EditSettings>(defaultEdits)
   return {
     settings,
-    update: (patch: Partial<Pick<EditSettings, 'frameId' | 'filterId' | 'caption'>>) =>
+    update: (patch: Partial<Pick<EditSettings, 'frameId' | 'filterId' | 'caption' | 'captionFontId'>>) =>
       setSettings((s) => ({ ...s, ...patch })),
     addOverlay: (item: OverlayItem) => setSettings((s) => ({ ...s, overlays: [...s.overlays, item] })),
     updateOverlay: (id: string, patch: OverlayPatch) =>
@@ -46,6 +47,7 @@ export function useEditSettings() {
       settings.frameId === null &&
       settings.filterId === null &&
       settings.caption === '' &&
+      settings.captionFontId === 'serif' &&
       settings.overlays.length === 0,
   }
 }

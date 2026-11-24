@@ -1,5 +1,6 @@
 import { useRef, type KeyboardEvent, type PointerEvent } from 'react'
 import { clamp01, findSticker, overlayLabel, type OverlayItem, type OverlayPatch } from './overlays'
+import { fontFamilyFor } from './fonts'
 
 export interface OverlayControls {
   selectedId: string | null
@@ -120,6 +121,7 @@ export function OverlayLayer({ items, controls }: Props) {
                   fontSize: `${item.size}cqw`,
                   lineHeight: 1,
                   fontWeight: 600,
+                  fontFamily: fontFamilyFor(item.fontId),
                   whiteSpace: 'nowrap',
                   color: item.color,
                 }}
