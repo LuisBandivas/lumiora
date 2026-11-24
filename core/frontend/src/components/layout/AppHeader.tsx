@@ -25,7 +25,7 @@ export function AppHeader({ onHome }: Props) {
         Skip to content
       </a>
       <div className="mx-auto flex w-full max-w-3/4 items-center justify-between gap-4 px-4 py-3 sm:py-4">
-        <button type="button" onClick={onHome} aria-label="Ephemora, return to Choose look" className="group flex min-w-0 items-center gap-3 rounded-xl text-left">
+        <button type="button" onClick={onHome} aria-label="Ephemora, return to start" className="group flex min-w-0 items-center gap-3 rounded-xl text-left">
           <BrandMark />
           <span className="flex min-w-0 flex-col">
             <span className="font-editorial text-xl leading-tight group-hover:text-accent sm:text-2xl">Ephemora</span>

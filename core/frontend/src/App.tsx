@@ -13,13 +13,14 @@ import { useTemplateSelection } from './features/templates/useTemplateSelection'
 import { ReviewScreen } from './features/editor/ReviewScreen'
 import { ExportScreen } from './features/export/ExportScreen'
 import { LoginScreen } from './features/auth/LoginScreen'
+import { StartPage } from './features/templates/StartPage'
 
 function App() {
-  const [step, setStep] = useState<JourneyStep>('select')
+  const [step, setStep] = useState<JourneyStep | 'home'>(() => window.location.pathname === '/create' ? 'select' : 'home')
   const selection = useTemplateSelection()
   const photos = usePhotoSession(selection.template)
   const edits = useEditSettings()
-  const previousStep = useRef<JourneyStep>('select')
+  const previousStep = useRef<JourneyStep | 'home'>('home')
 
   // Runs when the incoming screen mounts, after the outgoing transition has finished.
   const focusStep = useCallback((node: HTMLDivElement | null) => {
@@ -34,7 +35,7 @@ function App() {
     window.scrollTo(0, 0)
   }, [step])
 
-  const index = stepIndex(step)
+  const index = step === 'home' ? 0 : stepIndex(step)
   const go =(delta: number) => setStep(steps[index + delta].id)
 
   if (window.location.pathname === '/login' || window.location.pathname === '/signup') {
@@ -45,8 +46,8 @@ function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="flex min-h-screen flex-col">
-        <AppHeader onHome={() => setStep('select')} />
-        <StepIndicator current={step} onNavigate={setStep} />
+        <AppHeader onHome={() => setStep('home')} />
+        {step !== 'home' && <StepIndicator current={step} onNavigate={setStep} />}
         {/* overflow-x-clip, not hidden: hidden makes main a scroll container and breaks sticky bars. */}
         <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col overflow-x-clip">
           <AnimatePresence mode="wait" initial={false}>
@@ -59,7 +60,15 @@ function App() {
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
             >
-              {step === 'select' ? (
+              {step === 'home' ? (
+                <StartPage
+                  onTemplates={() => setStep('select')}
+                  onBlank={() => {
+                    selection.selectCategory('create')
+                    setStep('select')
+                  }}
+                />
+              ) : step === 'select' ? (
                 <ChooseLook selection={selection} onContinue={() => go(1)} />
               ) : step === 'source' ? (
                 <CaptureScreen

@@ -8,9 +8,9 @@ The app lives in `core/frontend`. `package.json` provides `dev`, `build`, `lint`
 
 ### UI shell (implemented)
 
-The shell follows the [UI](UI.md) journey. It starts on Choose look, has no landing page, and uses no router.
+The shell follows the [UI](UI.md) journey. The root path opens a start page with template and blank-layout choices; `/create` opens Choose look directly. The start page is outside the five-step progress indicator. No router is installed.
 
-- `src/App.tsx` holds the journey step (`select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes.
+- `src/App.tsx` holds the journey step (`home`, `select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes. `features/templates/StartPage.tsx` offers template browsing or blank-layout entry; the latter selects the existing Create Your Own category.
 - `src/app/journey.ts` defines the five steps. `components/layout/` holds `AppHeader`, `StepIndicator` (earlier steps are clickable, later ones disabled) and `AppFooter`.
 - `features/templates/` holds:
   - `catalog.ts`, the 18-template first-release catalog (see [Features](FEATURES.md#first-release-template-catalog)). Each template has its photo count, columns, a layout, a derived export aspect ratio and default frame and filter IDs.
