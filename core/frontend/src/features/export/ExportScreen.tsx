@@ -46,7 +46,7 @@ export function ExportScreen({ template, photos, edits, onBack, onStartOver }: P
   const downloadVideo = async () => {
     setVideoStatus('exporting')
     try {
-      const blob = await renderCompositionVideo(template, photos.slots, photos.clips, edits.settings)
+      const blob = await renderCompositionVideo(template, photos.slots, photos.clips, photos.cameras, edits.settings, photos.timer)
       const extension = blob.type.startsWith('video/mp4') ? 'mp4' : 'webm'
       const name = `ephemora-${template.id}.${extension}`
       downloadBlob(blob, name)

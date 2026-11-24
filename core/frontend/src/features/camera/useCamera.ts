@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { CameraFacing } from './usePhotoSession'
 
-export type CameraState = 'idle' | 'requesting' | 'ready' | 'denied' | 'unavailable' | 'error'
+export type CameraState = 'idle' | 'requesting' | 'ready' | 'denied' | 'unavailable' | 'back-unavailable' | 'error'
 
 function classify(error: unknown): CameraState {
   const name = error instanceof DOMException ? error.name : ''
@@ -12,7 +13,7 @@ function classify(error: unknown): CameraState {
 }
 
 // Camera access starts only when start() is called, so the permission prompt follows a user choice.
-export function useCamera() {
+export function useCamera(initialFacing: CameraFacing, onFacingChange: (facing: CameraFacing) => void) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const requestRef = useRef(0)
@@ -30,7 +31,8 @@ export function useCamera() {
     setState('idle')
   }, [release])
 
-  const start = useCallback(async () => {
+  const [facing, setFacing] = useState<CameraFacing>(initialFacing)
+  const start = useCallback(async (requestedFacing: CameraFacing = facing) => {
     release()
     if (!navigator.mediaDevices?.getUserMedia) {
       setState('unavailable')
@@ -40,7 +42,7 @@ export function useCamera() {
     setState('requesting')
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 960 } },
+        video: { facingMode: { exact: requestedFacing }, width: { ideal: 1280 }, height: { ideal: 960 } },
         audio: false,
       })
       // The person left or restarted while the permission prompt was open.
@@ -49,6 +51,8 @@ export function useCamera() {
         return
       }
       streamRef.current = stream
+      setFacing(requestedFacing)
+      onFacingChange(requestedFacing)
       const video = videoRef.current
       if (video) {
         video.srcObject = stream
@@ -56,12 +60,15 @@ export function useCamera() {
       }
       setState('ready')
     } catch (error) {
-      if (request === requestRef.current) setState(classify(error))
+      if (request === requestRef.current) {
+        const classified = classify(error)
+        setState(requestedFacing === 'environment' && classified === 'unavailable' ? 'back-unavailable' : classified)
+      }
     }
-  }, [release])
+  }, [release, facing, onFacingChange])
 
   // Stop old tracks when leaving the screen.
   useEffect(() => release, [release])
 
-  return { videoRef, state, start, stop }
+  return { videoRef, state, facing, start, stop }
 }

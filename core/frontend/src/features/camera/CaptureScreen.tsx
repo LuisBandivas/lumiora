@@ -41,6 +41,18 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
 
       <div className="mx-auto mt-8 grid w-full max-w-5xl flex-1 gap-8 px-4 lg:grid-cols-2 lg:items-start">
         <div className="min-w-0">
+          <fieldset className="mb-4 flex justify-center gap-4" aria-describedby="timer-help">
+            <legend className="mb-2 w-full text-center text-sm font-medium">Capture timer</legend>
+            {([0, 3, 5] as const).map((seconds) => (
+              <label key={seconds} className="flex items-center gap-2 text-sm">
+                <input type="radio" name="capture-timer" value={seconds} checked={session.timer === seconds}
+                  disabled={session.timerLocked} onChange={() => session.setTimer(seconds)} />
+                {seconds === 0 ? 'Off' : `${seconds} seconds`}
+              </label>
+            ))}
+            <span id="timer-help" className="sr-only">{session.timerLocked ? 'Remove all camera photos to change the timer.' : 'One timer applies to all camera photos in this template.'}</span>
+          </fieldset>
+          {session.timerLocked && <p className="mb-3 text-center text-xs text-muted">Timer locked while this template has camera photos. Remove them to change it.</p>}
           <div role="tablist" onKeyDown={navigateTabs} aria-label="Photo source" className="mb-4 flex justify-center gap-2">
             {sources.map((s) => (
               <button
@@ -66,6 +78,9 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
             {source === 'camera' ? (
               <CameraPanel
                 targetLabel={targetLabel}
+                timer={session.timer}
+                facing={session.cameraFacing}
+                onFacingChange={session.setCameraFacing}
                 onCapture={session.placeCapture}
                 onUseUpload={() => setSource('upload')}
               />

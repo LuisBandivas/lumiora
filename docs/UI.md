@@ -18,6 +18,8 @@ flowchart LR
 
 ## Screen responsibilities
 
+**Planned controls:** On Capture or upload, show a clearly labeled 0 / 3 / 5 second timer choice before the first camera shot. Default to 3 seconds. Once that template has a camera capture, show the selected value as locked and explain that removing its camera captures permits a change. Keep the timer available when the camera is off, without asking for permission. Show Front / Back choice when camera capture is selected; switching between shots must stop the old stream, start the requested camera, and leave filled slots intact. If Back is unavailable, explain it and offer Front or upload. The live preview, saved still, capture clip, composition preview and downloads must agree on each slot's orientation. In Customize, provide separate font choices for the caption and the selected movable text item, with a sample of each of the three styles. The current look remains the initial choice.
+
 | Screen | Main content | Essential states |
 | --- | --- | --- |
 | Choose look | Category tabs, template preview, photo count, progress, Continue | Initial, category changed, template selected, invalid URL selection, empty category |

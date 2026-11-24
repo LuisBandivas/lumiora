@@ -2,23 +2,26 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { captureFrame } from './captureFrame'
 import { useCamera } from './useCamera'
-import { CLIP_SECONDS, playableClipUrl, startClip } from './recordClip'
+import { playableClipUrl, startClip } from './recordClip'
+import type { CameraFacing, TimerSeconds } from './usePhotoSession'
 
 // Capture clips cover the full three-second countdown.
-const COUNTDOWN_SECONDS = CLIP_SECONDS
 
 interface Props {
   /** Which slot the next photo goes to, e.g. "photo 2". */
   targetLabel: string
-  onCapture: (url: string, clipUrl: string | null) => void
+  timer: TimerSeconds
+  facing: CameraFacing
+  onFacingChange: (facing: CameraFacing) => void
+  onCapture: (url: string, clipUrl: string | null, facing: CameraFacing) => void
   onUseUpload: () => void
 }
 
 const secondary =
   'rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium hover:border-ink'
 
-export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
-  const { videoRef, state, start, stop } = useCamera()
+export function CameraPanel({ targetLabel, timer, facing: initialFacing, onFacingChange, onCapture, onUseUpload }: Props) {
+  const { videoRef, state, facing, start, stop } = useCamera(initialFacing, onFacingChange)
   const [count, setCount] = useState<number | null>(null)
   const [capturing, setCapturing] = useState(false)
   const [captureError, setCaptureError] = useState(false)
@@ -44,10 +47,10 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
     recordingRef.current = null
     const clipResult = recording?.stop().catch(() => null)
     try {
-      const photoUrl = await captureFrame(video, true)
+      const photoUrl = await captureFrame(video, facing === 'user')
       const clipBlob = await clipResult
       const clipUrl = clipBlob ? await playableClipUrl(clipBlob) : null
-      onCaptureRef.current(photoUrl, clipUrl)
+      onCaptureRef.current(photoUrl, clipUrl, facing)
       setClipError(!clipUrl)
       setCaptureError(false)
     } catch {
@@ -55,7 +58,7 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
     } finally {
       setCapturing(false)
     }
-  }, [videoRef])
+  }, [videoRef, facing])
 
   useEffect(() => {
     if (count === null) return
@@ -93,7 +96,7 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
           playsInline
           muted
           aria-label="Live camera preview"
-          className={`size-full -scale-x-100 object-cover ${ready ? '' : 'hidden'}`}
+          className={`size-full object-cover ${facing === 'user' ? '-scale-x-100' : ''} ${ready ? '' : 'hidden'}`}
         />
 
         {!ready && (
@@ -124,19 +127,27 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
 
       {ready && (
         <div className="mt-2 flex items-center justify-center gap-3">
+          <label className="text-sm">Camera
+            <select aria-label="Camera direction" value={facing} disabled={busy}
+              onChange={(event) => void start(event.target.value as CameraFacing)}
+              className="ml-2 rounded border border-line bg-surface px-2 py-1">
+              <option value="user">Front</option><option value="environment">Back</option>
+            </select>
+          </label>
           <motion.button
             type="button"
             disabled={busy}
             onClick={() => {
               const stream = videoRef.current?.srcObject
               try {
-                recordingRef.current = stream instanceof MediaStream ? startClip(stream) : null
-                setClipError(!recordingRef.current)
+                recordingRef.current = timer > 0 && stream instanceof MediaStream ? startClip(stream) : null
+                setClipError(timer > 0 && !recordingRef.current)
               } catch {
                 recordingRef.current = null
-                setClipError(true)
+                setClipError(timer > 0)
               }
-              setCount(COUNTDOWN_SECONDS)
+              if (timer === 0) void shoot()
+              else setCount(timer)
             }}
             whileTap={{ scale: 0.96 }}
             className="rounded-full bg-accent px-8 py-3 font-medium text-accent-ink hover:opacity-90 disabled:opacity-40"
@@ -154,7 +165,7 @@ export function CameraPanel({ targetLabel, onCapture, onUseUpload }: Props) {
 
 interface MessageProps {
   state: ReturnType<typeof useCamera>['state']
-  onStart: () => void
+  onStart: (facing?: CameraFacing) => void
   onUseUpload: () => void
 }
 
@@ -171,7 +182,7 @@ function CameraMessage({ state, onStart, onUseUpload }: MessageProps) {
             Allow the camera in your browser's site settings, then try again. You can also upload photos instead.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
-            <button type="button" onClick={onStart} className={button}>
+            <button type="button" onClick={() => onStart()} className={button}>
               Try again
             </button>
             <button type="button" onClick={onUseUpload} className={button}>
@@ -180,6 +191,8 @@ function CameraMessage({ state, onStart, onUseUpload }: MessageProps) {
           </div>
         </div>
       )
+    case 'back-unavailable':
+      return <div><p className="font-medium">Back camera unavailable.</p><p className="mt-1 text-sm opacity-80">Choose the front camera or upload photos.</p><div className="flex justify-center gap-2"><button type="button" onClick={() => onStart('user')} className={button}>Use front camera</button><button type="button" onClick={onUseUpload} className={button}>Upload instead</button></div></div>
     case 'unavailable':
       return (
         <div>
@@ -197,7 +210,7 @@ function CameraMessage({ state, onStart, onUseUpload }: MessageProps) {
         <div>
           <p className="font-medium">The camera could not start.</p>
           <p className="mt-1 text-sm opacity-80">Another app may be using it. Close it and try again.</p>
-          <button type="button" onClick={onStart} className={button}>
+            <button type="button" onClick={() => onStart()} className={button}>
             Try again
           </button>
         </div>
@@ -207,7 +220,7 @@ function CameraMessage({ state, onStart, onUseUpload }: MessageProps) {
         <div>
           <p className="font-medium">Use your camera</p>
           <p className="mt-1 text-sm opacity-80">Photos are taken on this device and are not uploaded.</p>
-          <button type="button" onClick={onStart} className={button}>
+            <button type="button" onClick={() => onStart()} className={button}>
             Turn on camera
           </button>
         </div>

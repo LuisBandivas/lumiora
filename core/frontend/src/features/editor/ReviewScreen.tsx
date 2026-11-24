@@ -31,6 +31,7 @@ export function ReviewScreen({ template, photos, edits, onEdit, onContinue }: Pr
           template={template}
           slots={photos.slots}
           clips={photos.clips}
+          cameras={photos.cameras}
           playing={playback.playing}
           onPlaybackFailure={playback.fail}
           edits={edits.settings}

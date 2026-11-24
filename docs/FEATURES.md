@@ -54,13 +54,14 @@ The table describes proposed behavior, not a promise that every control or visua
 
 If playback errors, stalls, or drops many frames, the preview shows stills and leaves Play available to try again. The captured clips and video export remain available; this fallback affects preview playback only.
 
+**Implemented creative controls (physical-device verification pending):** Offer font choices independently for the caption and each movable text item. The initial font options use local system stacks for a classic serif, clean sans serif, and handwriting; the current look remains the default. The timer choice of 0, 3, or 5 seconds appears on Capture or upload, defaults to 3, locks after the first camera capture for that template, and unlocks when all camera captures are removed or replaced by uploads. Other templates inherit the last selected timer. Zero-second captures save a still without a clip; timed captures record during the selected countdown. Front and Back choices persist for the current session and can switch between shots. Each slot retains its orientation through preview and composition video rendering. If Back is unavailable, the camera panel offers Front or upload. Font files are not bundled yet; licensing and cross-device consistency remain **Open**.
+
 ## Later candidates
 
-- More stickers, text fonts, pinch-to-resize and rotate gestures, more filters, and more layouts.
+- More stickers, pinch-to-resize and rotate gestures, more filters, and more layouts.
 - Surprise-me selection and additional templates in each category.
 - Personal gallery and optional accounts.
 - Cloud storage, generated share links, and QR codes.
-- Rear camera selection where supported.
 
 Gallery and sharing depend on product and privacy decisions in [Architecture](ARCHITECTURE.md). Local file upload can be added independently because it need not send photographs to a server.
 
@@ -81,7 +82,7 @@ Gallery and sharing depend on product and privacy decisions in [Architecture](AR
 | Whether local upload ships with camera capture in the first release | Determines the source-choice UI and file validation work. |
 | Whether Surprise me chooses within the active category or across all categories | Determines how predictable the action feels. |
 | What happens when a template changes after photos exist | Avoids unexpected loss or mismatched slot counts. |
-| Whether the three-second countdown is configurable | Affects accessibility and session timing; three seconds is chosen for capture clips. |
+| Exact font families and redistribution licenses | Choose three fonts whose bundled files can be shipped and whose browser and canvas rendering can be verified. |
 | PNG export format, dimensions, and filename | The current PNG choice is still provisional; the composition video format and width are settled above. |
 | Whether editing survives refresh | Determines if local persistence is needed. |
 | Later gallery retention and deletion rules | Must be settled before any cloud storage is added. |

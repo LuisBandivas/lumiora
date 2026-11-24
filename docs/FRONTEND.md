@@ -48,6 +48,13 @@ The shell follows the [UI](UI.md) journey. It starts on Choose look, has no land
 
 ## Suggested structure as features arrive
 
+### Planned implementation: fonts, timer, and back camera
+
+1. Add a small font catalog with stable IDs, local font files, and explicit canvas font names. Add a caption font ID to edit settings and a font ID to each text overlay, preserving the current look as the default. Expose both choices in Customize. Wait for the selected font to load before PNG or video rendering; use the same catalog for CSS preview and canvas so text width and truncation remain consistent. Verify the bundled files' licenses before adding them.
+2. Give each template a timer setting of 0, 3, or 5 seconds, initialized from the session's last timer choice. Track which filled slots came from the camera so the choice locks while that template has camera captures, including still-only captures. Unlock it when those captures are removed or replaced by uploads. In `CameraPanel`, derive countdown and optional recording from that setting. A 0-second shot skips recording. Remove the fixed `CLIP_SECONDS` assumption from capture and composition export; the export duration follows the selected template timer when clips exist. Preserve the still photo if clip recording fails.
+3. Make camera direction an explicit Front / Back selection in `useCamera` and `CameraPanel`. Stop old tracks before requesting a new camera, guard late permission responses, and recover if the requested back camera is unavailable. Carry the actual direction used with each captured slot. Apply mirroring to front captures only in the live view, still capture, clip preview, and composition renderer; do not alter existing slots when switching direction. Keep camera data and media local to the browser.
+4. Verify pure timer-lock and slot-orientation rules with focused Vitest tests. Run lint, build, and tests, then manually check 0 / 3 / 5 second capture, retakes, template switching, front/back switching, mixed-camera compositions, font selection, PNG/video parity, and unavailable-camera recovery on the target browsers and devices. The existing Edge fake-camera pass cannot establish physical back-camera behavior or Safari recording support.
+
 ```text
 core/frontend/src/
   app/             application composition and navigation

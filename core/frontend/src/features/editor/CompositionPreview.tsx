@@ -5,11 +5,14 @@ import { OverlayLayer, type OverlayControls } from './OverlayLayer'
 import { placeholderBackground } from './presets'
 import { resolveEdits, type EditSettings } from './useEditSettings'
 import { pauseOnDroppedFrames, pauseOnSustainedStall } from '../camera/useMotionPlayback'
+import { fontFamilyFor } from './fonts'
+import type { CameraFacing } from '../camera/usePhotoSession'
 
 interface Props {
   template: Template
   slots: (string | null)[]
   clips?: (string | null)[]
+  cameras?: (CameraFacing | null)[]
   playing?: boolean
   onPlaybackFailure?: () => void
   edits: EditSettings
@@ -24,6 +27,7 @@ export function CompositionPreview({
   template,
   slots,
   clips,
+  cameras,
   playing = false,
   onPlaybackFailure,
   edits,
@@ -79,7 +83,7 @@ export function CompositionPreview({
                     onError={onPlaybackFailure}
                     onStalled={(event) => onPlaybackFailure && pauseOnSustainedStall(event, onPlaybackFailure)}
                     onTimeUpdate={(event) => onPlaybackFailure && pauseOnDroppedFrames(event, onPlaybackFailure)}
-                    className="size-full -scale-x-100 object-cover"
+                    className={`size-full object-cover ${cameras?.[i] === 'user' ? '-scale-x-100' : ''}`}
                     style={{ filter: filter.css }}
                   />
                 ) : url && (
@@ -101,6 +105,7 @@ export function CompositionPreview({
               height: `${layout.captionHeight}cqw`,
               fontSize: `${layout.captionFont}cqw`,
               color: frame.ink,
+              fontFamily: fontFamilyFor(edits.captionFontId),
             }}
           >
             {caption}

@@ -2,7 +2,8 @@ import type { Template } from '../templates/catalog'
 import { drawCompositionFrame, type FrameSource } from '../editor/drawCompositionFrame'
 import { assertCanvasFilter, loadImage } from '../editor/renderComposition'
 import type { EditSettings } from '../editor/useEditSettings'
-import { CLIP_SECONDS, recordingMimeType } from '../camera/recordClip'
+import { recordingMimeType } from '../camera/recordClip'
+import type { CameraFacing, TimerSeconds } from '../camera/usePhotoSession'
 
 export const VIDEO_WIDTH = 720
 export const VIDEO_FPS = 30
@@ -37,8 +38,11 @@ export async function renderCompositionVideo(
   template: Template,
   photos: (string | null)[],
   clips: (string | null)[],
+  cameras: (CameraFacing | null)[],
   edits: EditSettings,
+  duration: TimerSeconds,
 ): Promise<Blob> {
+  await document.fonts.ready
   if (!clips.some(Boolean)) throw new Error('No capture clips are available')
   assertCanvasFilter(template, edits)
   const mimeType = recordingMimeType()
@@ -102,11 +106,11 @@ export async function renderCompositionVideo(
     void (async () => {
       try {
         await Promise.all(videos.map((video) => video.play()))
-        drawCompositionFrame(context, template, sources, edits, width, height)
+        drawCompositionFrame(context, template, sources, edits, width, height, cameras)
         recorder.start()
         const draw = () => {
           try {
-            drawCompositionFrame(context, template, sources, edits, width, height)
+            drawCompositionFrame(context, template, sources, edits, width, height, cameras)
             frameId = requestAnimationFrame(draw)
           } catch (error) {
             fail(error)
@@ -116,7 +120,7 @@ export async function renderCompositionVideo(
         timerId = window.setTimeout(() => {
           cancelAnimationFrame(frameId)
           if (recorder.state === 'recording') recorder.stop()
-        }, CLIP_SECONDS * 1000)
+        }, duration * 1000)
       } catch (error) {
         fail(error)
       }

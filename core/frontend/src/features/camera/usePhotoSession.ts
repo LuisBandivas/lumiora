@@ -1,8 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { Template } from '../templates/catalog'
 
 /** A filled slot holds an object URL for a photo that exists only in this browser. */
 export type Slots = (string | null)[]
+export type TimerSeconds = 0 | 3 | 5
+export type CameraFacing = 'user' | 'environment'
 
 /**
  * Fills the active slot first, then the remaining empty slots in order.
@@ -38,6 +40,11 @@ export function placePhotos(slots: Slots, active: number, urls: string[]) {
 export function usePhotoSession(template: Template) {
   const [store, setStore] = useState<Record<string, Slots>>({})
   const [clipStore, setClipStore] = useState<Record<string, Slots>>({})
+  const [cameraStore, setCameraStore] = useState<Record<string, (CameraFacing | null)[]>>({})
+  const [timerStore, setTimerStore] = useState<Record<string, TimerSeconds>>({})
+  const [lastTimer, setLastTimer] = useState<TimerSeconds>(3)
+  const [cameraFacing, setCameraFacing] = useState<CameraFacing>('user')
+  const rememberCameraFacing = useCallback((value: CameraFacing) => setCameraFacing(value), [])
   const [activeRaw, setActive] = useState(0)
 
   const slots = useMemo<Slots>(
@@ -48,6 +55,9 @@ export function usePhotoSession(template: Template) {
     () => clipStore[template.id] ?? Array.from({ length: template.photoCount }, () => null),
     [clipStore, template],
   )
+  const cameras = cameraStore[template.id] ?? Array.from({ length: template.photoCount }, () => null)
+  const timer = timerStore[template.id] ?? lastTimer
+  const timerLocked = cameras.some(Boolean)
   const active = Math.min(activeRaw, template.photoCount - 1)
   const filled = slots.filter(Boolean).length
 
@@ -67,12 +77,17 @@ export function usePhotoSession(template: Template) {
         nextClips[index] = null
       }
     })
+    const nextCameras = [...cameras]
+    result.next.forEach((url, index) => {
+      if (url !== slots[index]) nextCameras[index] = null
+    })
+    setCameraStore((s) => ({ ...s, [template.id]: nextCameras }))
     setClipStore((s) => ({ ...s, [template.id]: nextClips }))
     commit(result.next, result.nextActive)
     return result.placed
   }
 
-  const placeCapture = (photoUrl: string, clipUrl: string | null) => {
+  const placeCapture = (photoUrl: string, clipUrl: string | null, facing: CameraFacing) => {
     const result = placePhotos(slots, active, [photoUrl])
     ;[...result.discarded, ...result.replaced].forEach((url) => URL.revokeObjectURL(url))
     if (!result.placed) {
@@ -82,6 +97,9 @@ export function usePhotoSession(template: Template) {
     const nextClips = [...clips]
     if (nextClips[active]) URL.revokeObjectURL(nextClips[active])
     nextClips[active] = clipUrl
+    const nextCameras = [...cameras]
+    nextCameras[active] = facing
+    setCameraStore((s) => ({ ...s, [template.id]: nextCameras }))
     setClipStore((s) => ({ ...s, [template.id]: nextClips }))
     commit(result.next, result.nextActive)
   }
@@ -95,6 +113,9 @@ export function usePhotoSession(template: Template) {
     next[index] = null
     const nextClips = [...clips]
     nextClips[index] = null
+    const nextCameras = [...cameras]
+    nextCameras[index] = null
+    setCameraStore((s) => ({ ...s, [template.id]: nextCameras }))
     setClipStore((s) => ({ ...s, [template.id]: nextClips }))
     commit(next, index)
   }
@@ -105,13 +126,27 @@ export function usePhotoSession(template: Template) {
     Object.values(clipStore).forEach((list) => list.forEach((url) => url && URL.revokeObjectURL(url)))
     setStore({})
     setClipStore({})
+    setCameraStore({})
+    setTimerStore({})
     setActive(0)
+    setLastTimer(3)
+    setCameraFacing('user')
   }
 
   return {
     clearAll,
     slots,
     clips,
+    cameras,
+    timer,
+    cameraFacing,
+    setCameraFacing: rememberCameraFacing,
+    timerLocked,
+    setTimer: (value: TimerSeconds) => {
+      if (timerLocked) return
+      setTimerStore((s) => ({ ...s, [template.id]: value }))
+      setLastTimer(value)
+    },
     hasMotion: clips.some(Boolean),
     active,
     filled,

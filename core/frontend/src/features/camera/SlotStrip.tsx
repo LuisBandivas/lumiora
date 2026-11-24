@@ -68,7 +68,7 @@ export function SlotStrip({ template, session, playing, onPlaybackFailure }: Pro
                         onError={onPlaybackFailure}
                         onStalled={(event) => pauseOnSustainedStall(event, onPlaybackFailure)}
                         onTimeUpdate={(event) => pauseOnDroppedFrames(event, onPlaybackFailure)}
-                        className="size-full -scale-x-100 object-cover"
+                        className={`size-full object-cover ${session.cameras[i] === 'user' ? '-scale-x-100' : ''}`}
                       />
                     ) : <img src={url} alt="" className="size-full object-cover" />
                   ) : <span>{i + 1}</span>}
