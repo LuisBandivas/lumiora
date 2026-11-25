@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { steps, stepIndex, type JourneyStep } from './app/journey'
 import { AppFooter } from './components/layout/AppFooter'
@@ -21,6 +21,12 @@ function App() {
   const photos = usePhotoSession(selection.template)
   const edits = useEditSettings()
   const previousStep = useRef<JourneyStep | 'home'>('home')
+
+  useEffect(() => {
+    const onPop = () => setStep(window.location.pathname === '/create' ? 'select' : 'home')
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
 
   // Runs when the incoming screen mounts, after the outgoing transition has finished.
   const focusStep = useCallback((node: HTMLDivElement | null) => {
@@ -46,7 +52,10 @@ function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="flex min-h-screen flex-col">
-        <AppHeader onHome={() => setStep('home')} />
+        <AppHeader onHome={() => {
+          window.history.pushState(null, '', '/')
+          setStep('home')
+        }} />
         {step !== 'home' && <StepIndicator current={step} onNavigate={setStep} />}
         {/* overflow-x-clip, not hidden: hidden makes main a scroll container and breaks sticky bars. */}
         <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col overflow-x-clip">
@@ -62,8 +71,13 @@ function App() {
             >
               {step === 'home' ? (
                 <StartPage
-                  onTemplates={() => setStep('select')}
+                  onTemplates={() => {
+                    window.history.pushState(null, '', '/create')
+                    selection.selectCategory('photostrips')
+                    setStep('select')
+                  }}
                   onBlank={() => {
+                    window.history.pushState(null, '', '/create')
                     selection.selectCategory('create')
                     setStep('select')
                   }}

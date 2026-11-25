@@ -9,10 +9,10 @@ describe('resolveSelection', () => {
     expect(s.notice).toBeNull()
   })
 
-  it('defaults to the first category and template with no notice for an empty URL', () => {
+  it('defaults to the blank category and first blank template with no notice for an empty URL', () => {
     const s = resolveSelection('')
-    expect(s.category).toBe('photostrips')
-    expect(s.template.id).toBe('2-cut')
+    expect(s.category).toBe('create')
+    expect(s.template.id).toBe('blank-1')
     expect(s.notice).toBeNull()
   })
 
@@ -25,7 +25,7 @@ describe('resolveSelection', () => {
 
   it('falls back with a notice for an unknown category', () => {
     const s = resolveSelection('?category=gone&template=3-cut')
-    expect(s.category).toBe('photostrips')
+    expect(s.category).toBe('create')
     expect(s.notice).not.toBeNull()
   })
 

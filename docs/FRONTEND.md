@@ -8,16 +8,16 @@ The app lives in `core/frontend`. `package.json` provides `dev`, `build`, `lint`
 
 ### UI shell (implemented)
 
-The shell follows the [UI](UI.md) journey. The root path opens a start page with template and blank-layout choices; `/create` opens Choose look directly. The start page is outside the five-step progress indicator. No router is installed.
+The shell follows the [UI](UI.md) journey. The root path (`/`) opens a landing page with template and blank-layout entry points. Choosing either opens `/create` and the five-step journey; `/create` restores valid category and template query parameters. No router is installed.
 
-- `src/App.tsx` holds the journey step (`home`, `select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes. `features/templates/StartPage.tsx` offers template browsing or blank-layout entry; the latter selects the existing Create Your Own category.
+- `src/App.tsx` holds the landing state and journey step (`home`, `select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes. `features/templates/StartPage.tsx` is the root landing page and offers template browsing or blank-layout entry.
 - `src/app/journey.ts` defines the five steps. `components/layout/` holds `AppHeader`, `StepIndicator` (earlier steps are clickable, later ones disabled) and `AppFooter`.
 - `features/templates/` holds:
   - `catalog.ts`, the 18-template first-release catalog (see [Features](FEATURES.md#first-release-template-catalog)). Each template has its photo count, columns, a layout, a derived export aspect ratio and default frame and filter IDs.
   - `layout.ts`, the layout proportions (padding, gap, caption band and font size as a percent of composition width) and `aspectFor`, which derives a template's aspect ratio from the photo shape. Previews and the export renderer both read these, so they stay in step.
   - `useTemplateSelection.ts`, the selection hook that reads and writes `/create?category=…&template=…` with `history.replaceState` and validates IDs with a fallback notice.
   - `TemplatePreview.tsx`, which draws a template with empty slots through `CompositionPreview`, so the preview shows its real geometry and default look.
-  - `ChooseLook.tsx`, the Choose look screen.
+  - `ChooseLook.tsx`, the landing and Choose look screen; an empty selection URL defaults to Create Your Own and Blank · 1 photo.
 - All five journey screens are implemented. The placeholder page was removed.
 - `features/auth/AuthProvider.tsx` owns the optional Supabase Auth session and exposes email/password, signup, Google OAuth, and sign-out operations to the login screens and app header. `lib/supabase.ts` creates the browser client from the frontend's public Vite environment variables. Auth does not gate the photo journey or upload photos.
 - `features/editor/ReviewScreen.tsx` shows the final `CompositionPreview` with **Continue to export** and **Edit**.

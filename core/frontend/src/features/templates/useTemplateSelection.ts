@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
-  categories,
   findCategory,
   findTemplate,
   templatesIn,
@@ -23,7 +22,7 @@ export function resolveSelection(search: string): Selection {
   const rawCategory = params.get('category')
   const rawTemplate = params.get('template')
 
-  const category = findCategory(rawCategory)?.id ?? categories[0].id
+  const category = findCategory(rawCategory)?.id ?? 'create'
   const requested = findTemplate(rawTemplate)
   const options = templatesIn(category)
   const template = requested && requested.category === category ? requested : options[0]
@@ -40,6 +39,8 @@ export function resolveSelection(search: string): Selection {
 }
 
 function writeUrl(selection: Selection, mode: 'push' | 'replace') {
+  if (window.location.pathname === '/') return
+
   const params = new URLSearchParams({
     category: selection.category,
     template: selection.template.id,

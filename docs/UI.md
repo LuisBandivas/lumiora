@@ -1,6 +1,6 @@
 # UI and interaction direction
 
-**Status: working draft.** The app opens on a start page where a person chooses a designed template or a blank layout, then enters the five-step local journey from template selection through capture/upload, customization, review and PNG export (see [Frontend](FRONTEND.md#ui-shell-implemented)). Release scope remains provisional. Ephemora's approved application identity is inspired by ephemeral moments and the feeling of an old photo album. Photo output remains open to each person's creative choices.
+**Status: working draft.** The root URL opens a landing page where a person chooses a designed template or a blank layout before entering the five-step local journey through template selection, capture/upload, customization, review and PNG export (see [Frontend](FRONTEND.md#ui-shell-implemented)). Release scope remains provisional. Ephemora's approved application identity is inspired by ephemeral moments and the feeling of an old photo album. Photo output remains open to each person's creative choices.
 
 ## Main journey
 
@@ -36,11 +36,13 @@ flowchart LR
 
 On a playback error, sustained stall, or high dropped-frame rate, fall back to stills in that preview and leave Play available to retry. This does not remove the capture clips or the video export option.
 
-Use one clear primary action per screen. The start page is outside the five-step progress indicator and offers **Choose a template** and **Start with a blank page**. The blank choice opens Choose look with **Create Your Own** selected. The five journey steps are **Choose look**, **Capture or upload**, **Customize**, **Review**, and **Export**. Preserve progress when moving backward within a session. Ask for camera permission in context, after the person chooses camera capture. Provide a direct retry action when the browser allows it; otherwise explain how to enable the camera in browser settings. Upload and later sharing remain scope decisions in [Features](FEATURES.md).
+The root landing page sits before the five-step progress indicator and offers **Choose a template** or **Start with a blank page**. Choosing either opens Choose look as step one; the blank option selects **Create Your Own** and the blank one-photo layout. The five journey steps are **Choose look**, **Capture or upload**, **Customize**, **Review**, and **Export**. Preserve progress when moving backward within a session. Ask for camera permission in context, after the person chooses camera capture. Provide a direct retry action when the browser allows it; otherwise explain how to enable the camera in browser settings. Upload and later sharing remain scope decisions in [Features](FEATURES.md).
 
 **Implemented progress treatment:** On wider screens, the five steps sit in equal-width tiles with the current step highlighted. On phones, all five numbered positions stay visible and a separate label names the current step. Completed steps can be used to move back; upcoming steps remain unavailable. A slim track shows how far the session has progressed.
 
 ## Choose look screen
+
+When there is no explicit category or template in the URL, open **Create Your Own** with **Blank · 1 photo** selected. A valid category and template in the URL restore that selection.
 
 - Heading: **A moment to remember.** Supporting copy: **Choose a look for your photos, then make it yours.**
 - Top-level categories: **Photostrips**, **Single Photo**, **Frames**, **Create Your Own**. Use segmented tabs or another equally clear control; show which category is active.
@@ -91,7 +93,6 @@ The chosen color and type tokens live in `core/frontend/src/index.css`. Spacing,
 - Whether the current original frame mark needs refinement after visual review.
 - Initial photo style presets and how users can mix their elements.
 - Whether the implemented 18-template catalog is final (see [Features](FEATURES.md#first-release-template-catalog)). Each preview is the template drawn with its default frame and filter and empty slots.
-- Whether the five-step indicator includes a separate landing page or begins on Choose look; the current proposal and the shell begin on Choose look.
 - Whether Surprise me selects within the current category or all templates.
 - Whether capture is automatic after countdown or initiated for each slot. The shell starts the countdown for each photo on request and moves to the next empty slot afterward.
 - Whether the phone editing layout (below) needs more than three tabs once more editing tools exist. The current layout keeps the preview in view while any control is adjusted.

@@ -9,7 +9,7 @@ export function StartPage({ onTemplates, onBlank }: Props) {
       <div className="mx-auto w-full max-w-4xl text-center">
         <p className="mb-3 text-[0.65rem] uppercase tracking-[0.28em] text-muted">The little moments, made lasting</p>
         <h1 id="start-heading" className="text-4xl sm:text-6xl">Make room for a moment.</h1>
-        <p className="mx-auto mt-4 max-w-xl text-muted">Start with a ready-made template or build your photo layout from a blank page.</p>
+        <p className="mx-auto mt-4 max-w-xl text-muted">Start with a ready-made template or begin with a clean, blank layout.</p>
 
         <div className="mt-10 grid gap-4 text-left sm:grid-cols-2">
           <button type="button" onClick={onTemplates} className="group min-h-52 rounded-3xl border border-line bg-surface p-7 text-left transition hover:-translate-y-1 hover:border-accent hover:shadow-lg">
