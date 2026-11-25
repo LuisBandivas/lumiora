@@ -12,3 +12,13 @@ For each task:
 4. Verify the changed behavior with the checks described in `docs/CODING.md`, and report what ran.
 
 Captured and uploaded images are personal data. Keep image handling local to the browser unless the user explicitly chooses a storage or sharing action. Never add secrets or real credentials to the repository.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and feature specs live in GitHub Issues for LuisBandivas/lumiora. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+This is a single-context repository with the root `CONTEXT.md` and `docs/adr/`. See `docs/agents/domain.md`.
