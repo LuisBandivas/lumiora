@@ -63,9 +63,10 @@ export function CustomizeScreen({ template, photos, edits, onBack, onContinue }:
     `${panel === id ? 'flex' : 'hidden'} flex-col gap-6 md:flex [&_:is(input,button)]:scroll-mt-[calc(var(--preview-h)+2.5rem)] [&_:is(input,button)]:scroll-mb-32 sm:[&_:is(input,button)]:scroll-mb-4 md:[&_:is(input,button)]:scroll-mt-4`
 
   return (
-    <section aria-labelledby="customize-heading" className="flex flex-1 flex-col">
-      <div className="mx-auto w-full max-w-5xl px-4 pt-4 text-center sm:pt-12">
-        <h1 id="customize-heading" className="text-3xl font-semibold tracking-tight sm:text-4xl">
+    <section aria-labelledby="customize-heading" className="journey-screen flex flex-1 flex-col">
+      <div className="journey-intro mx-auto w-full max-w-5xl px-4 pt-4 text-center sm:pt-12">
+        <p className="journey-eyebrow">✦ &nbsp; Add your own little details</p>
+        <h1 id="customize-heading" className="text-3xl sm:text-4xl">
           Customize
         </h1>
         <p className="mt-2 hidden text-muted sm:block">

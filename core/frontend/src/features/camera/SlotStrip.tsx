@@ -21,7 +21,7 @@ export function SlotStrip({ template, session, playing, onPlaybackFailure }: Pro
     <div
       role="group"
       aria-label={`${template.name} photo slots`}
-      className="shadow-md ring-1 ring-line"
+      className="overflow-hidden rounded-md shadow-md ring-1 ring-line"
       style={{
         width: `min(100%, calc(clamp(14rem, 50vh, 28rem) * ${template.aspect}))`,
         aspectRatio: String(template.aspect),

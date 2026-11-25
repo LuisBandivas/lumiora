@@ -18,9 +18,9 @@ export function ChooseLook({ selection, onContinue }: Props) {
   const following = options[(index + 1) % options.length]
 
   return (
-    <section aria-labelledby="choose-heading" className="flex flex-1 flex-col">
-      <div className="mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
-        <p className="mb-3 text-[0.65rem] uppercase tracking-[0.28em] text-muted">The little moments, made lasting</p>
+    <section aria-labelledby="choose-heading" className="journey-screen flex flex-1 flex-col">
+      <div className="journey-intro mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
+        <p className="journey-eyebrow">✳ &nbsp; The little moments, made lasting</p>
         <h1 id="choose-heading" className="text-4xl sm:text-5xl">
           A moment to remember.
         </h1>
@@ -31,7 +31,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
         role="tablist"
         onKeyDown={navigateTabs}
         aria-label="Template categories"
-        className="mx-auto mt-6 flex w-full max-w-5xl gap-2 overflow-x-auto px-4 pb-1 sm:justify-center"
+        className="journey-category-tabs mx-auto mt-6 flex w-full max-w-5xl gap-2 overflow-x-auto px-4 pb-1 sm:justify-center"
       >
         {categories.map((c) => {
           const selected = c.id === category
@@ -47,8 +47,8 @@ export function ChooseLook({ selection, onContinue }: Props) {
               onClick={() => selectCategory(c.id)}
               className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                 selected
-                  ? 'border-ink bg-ink text-surface'
-                  : 'border-line bg-surface text-muted hover:text-ink'
+                  ? 'border-accent bg-accent text-accent-ink shadow-sm'
+                  : 'border-line bg-surface/80 text-muted hover:border-champagne hover:text-ink'
               }`}
             >
               {c.label}
@@ -63,7 +63,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
         </p>
       )}
 
-      <div role="tabpanel" id="template-panel" aria-labelledby={`category-${category}`} className="mx-auto mt-8 w-full max-w-5xl flex-1 px-4">
+      <div role="tabpanel" id="template-panel" aria-labelledby={`category-${category}`} className="journey-template-stage mx-auto mt-8 w-full max-w-5xl flex-1 px-4">
         <div aria-hidden="true" className="mx-auto mb-8 flex max-w-xs items-center gap-3 text-champagne"><span className="h-px flex-1 bg-line" /><span className="font-editorial text-xl">✦</span><span className="h-px flex-1 bg-line" /></div>
         {options.length === 0 ? (
           <p className="py-16 text-center text-muted">No templates in this category yet.</p>
@@ -74,7 +74,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
               onClick={previous}
               disabled={!neighbours}
               aria-label="Previous template"
-              className="grid size-11 shrink-0 place-items-center rounded-full border border-line bg-surface text-lg hover:border-ink disabled:opacity-30"
+              className="journey-arrow grid size-11 shrink-0 place-items-center rounded-full border border-line bg-surface text-lg hover:border-champagne disabled:opacity-30"
             >
               ←
             </button>
@@ -109,7 +109,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
               onClick={next}
               disabled={!neighbours}
               aria-label="Next template"
-              className="grid size-11 shrink-0 place-items-center rounded-full border border-line bg-surface text-lg hover:border-ink disabled:opacity-30"
+              className="journey-arrow grid size-11 shrink-0 place-items-center rounded-full border border-line bg-surface text-lg hover:border-champagne disabled:opacity-30"
             >
               →
             </button>
@@ -117,7 +117,7 @@ export function ChooseLook({ selection, onContinue }: Props) {
         )}
 
         <div className="mt-6 text-center" aria-live="polite">
-          <p className="text-lg font-medium">{template.name}</p>
+          <p className="journey-template-name text-xl">{template.name}</p>
           <p className="text-sm text-muted">
             {photoCountLabel(template.photoCount)} · {index + 1} / {options.length}
           </p>
@@ -133,14 +133,14 @@ export function ChooseLook({ selection, onContinue }: Props) {
                 aria-current={t.id === template.id}
                 className="grid size-11 place-items-center rounded-full"
               >
-                <span aria-hidden="true" className={`size-2.5 rounded-full ${t.id === template.id ? 'bg-ink' : 'bg-line'}`} />
+                <span aria-hidden="true" className={`size-2.5 rounded-full ${t.id === template.id ? 'bg-accent' : 'bg-line'}`} />
               </button>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="sticky bottom-0 mt-8 border-t border-line bg-canvas/90 px-4 py-4 backdrop-blur sm:static sm:border-0 sm:bg-transparent">
+      <div className="journey-action-bar sticky bottom-0 mt-8 border-t border-line bg-canvas/90 px-4 py-4 backdrop-blur sm:static sm:border-0 sm:bg-transparent">
         <motion.button
           type="button"
           onClick={onContinue}

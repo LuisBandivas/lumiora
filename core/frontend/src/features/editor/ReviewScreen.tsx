@@ -16,9 +16,10 @@ interface Props {
 export function ReviewScreen({ template, photos, edits, onEdit, onContinue }: Props) {
   const playback = useMotionPlayback()
   return (
-    <section aria-labelledby="review-heading" className="flex flex-1 flex-col">
-      <div className="mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
-        <h1 id="review-heading" className="text-3xl font-semibold tracking-tight sm:text-4xl">
+    <section aria-labelledby="review-heading" className="journey-screen flex flex-1 flex-col">
+      <div className="journey-intro mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
+        <p className="journey-eyebrow">✧ &nbsp; Almost a keepsake</p>
+        <h1 id="review-heading" className="text-3xl sm:text-4xl">
           Review
         </h1>
         <p className="mt-2 text-muted">

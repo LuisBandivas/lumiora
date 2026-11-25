@@ -90,7 +90,7 @@ export function CameraPanel({ targetLabel, timer, facing: initialFacing, onFacin
 
   return (
     <div>
-      <div className="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-card bg-ink">
+      <div className="camera-preview-shell relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-card bg-ink">
         <video
           ref={videoRef}
           playsInline

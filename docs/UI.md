@@ -4,7 +4,7 @@
 
 ## Main journey
 
-**Authentication:** `/login` presents working email/password sign-in and Google OAuth. `/signup` collects first name, last name, username, email, and password; when email confirmation is enabled, it tells the person to check their inbox. Authenticated users can sign out from the app header. Sign-in is optional and does not gate the browser-local photo journey. Enterprise SSO remains **Open**.
+**Authentication:** Sign in opens a modal over the current app screen; direct `/login` and `/signup` links open the matching dialog over the home screen. The dialog supports email/password sign-in and Google OAuth. Sign-up collects first name, last name, username, email, and password; when email confirmation is enabled, it tells the person to check their inbox. Closing the dialog returns to the screen behind it. Authenticated users can sign out from the app header. Sign-in is optional and does not gate the browser-local photo journey. Enterprise SSO remains **Open**.
 
 ```mermaid
 flowchart LR
@@ -37,6 +37,8 @@ flowchart LR
 On a playback error, sustained stall, or high dropped-frame rate, fall back to stills in that preview and leave Play available to retry. This does not remove the capture clips or the video export option.
 
 The root landing page sits before the five-step progress indicator. It has four sections: a hero, a three-step explanation, a template showcase, and a closing call to action. The top navigation and hero both offer **Choose a template** as the primary action; **Start with a blank page** is the secondary hero action. Template entry opens Choose look as step one; the blank option selects **Create Your Own** and the blank one-photo layout. The showcase includes an interactive, keyboard-operable preview cycling through three fixed sample compositions, with previous/next controls and direct slide buttons. These illustrative samples are separate from personal photos. The landing visual style retains Ephemora's warm ivory and mocha base, layering sage, dusty rose, and champagne across soft backgrounds, cards, and accents. Motion respects reduced-motion preferences. The five journey steps are **Choose look**, **Capture or upload**, **Customize**, **Review**, and **Export**. Preserve progress when moving backward within a session. Ask for camera permission in context, after the person chooses camera capture. Provide a direct retry action when the browser allows it; otherwise explain how to enable the camera in browser settings. Upload and later sharing remain scope decisions in [Features](FEATURES.md).
+
+**Creation-flow visual treatment:** Carry the landing page's warm paper surfaces, soft blush active states, garden-toned accents and restrained editorial details into Choose look and Capture or upload. Give the selected template preview and the capture controls and slot preview distinct, softly tinted cards. Keep the live camera view and photo composition prominent, preserve existing interaction and recovery behavior, and use the same visual language on Customize, Review and Export without changing their layouts or export output.
 
 **Implemented progress treatment:** On wider screens, the five steps sit in equal-width tiles with the current step highlighted. On phones, all five numbered positions stay visible and a separate label names the current step. Completed steps can be used to move back; upcoming steps remain unavailable. A slim track shows how far the session has progressed.
 

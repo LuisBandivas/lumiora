@@ -68,9 +68,10 @@ export function ExportScreen({ template, photos, edits, onBack, onStartOver }: P
   }[status]
 
   return (
-    <section aria-labelledby="export-heading" className="flex flex-1 flex-col">
-      <div className="mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
-        <h1 id="export-heading" className="text-3xl font-semibold tracking-tight sm:text-4xl">
+    <section aria-labelledby="export-heading" className="journey-screen flex flex-1 flex-col">
+      <div className="journey-intro mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
+        <p className="journey-eyebrow">♡ &nbsp; Keep this moment close</p>
+        <h1 id="export-heading" className="text-3xl sm:text-4xl">
           Export
         </h1>
         <p className="mt-2 text-muted">

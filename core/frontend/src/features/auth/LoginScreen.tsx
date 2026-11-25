@@ -1,8 +1,15 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { BrandMark } from '../../components/layout/BrandMark'
 import { useAuth } from './authContext'
 
-export function LoginScreen({ mode = 'login' }: { mode?: 'login' | 'signup' }) {
+interface Props {
+  mode: 'login' | 'signup'
+  onClose: () => void
+  onSwitchMode: (mode: 'login' | 'signup') => void
+}
+
+export function LoginScreen({ mode, onClose, onSwitchMode }: Props) {
+  const dialogRef = useRef<HTMLDialogElement>(null)
   const [notice, setNotice] = useState(() => {
     const params = new URLSearchParams(window.location.search)
     const authError = params.get('error_description') ?? params.get('error')
@@ -14,8 +21,16 @@ export function LoginScreen({ mode = 'login' }: { mode?: 'login' | 'signup' }) {
   const { user, loading, configured, signInWithGoogle, signInWithPassword, signUp } = useAuth()
 
   useEffect(() => {
-    if (user) window.location.replace('/')
-  }, [user])
+    const dialog = dialogRef.current
+    if (dialog && !dialog.open) dialog.showModal()
+    return () => {
+      if (dialog?.open) dialog.close()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user) onClose()
+  }, [user, onClose])
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -34,11 +49,11 @@ export function LoginScreen({ mode = 'login' }: { mode?: 'login' | 'signup' }) {
           lastName: String(fields.get('lastName') ?? '').trim(),
           username: String(fields.get('username') ?? '').trim(),
         })
-        if (hasSession) window.location.assign('/')
+        if (hasSession) onClose()
         else setNotice('Check your email for a confirmation link to finish creating your account.')
       } else {
         await signInWithPassword(email, password)
-        window.location.assign('/')
+        onClose()
       }
     } catch (error) {
       setNotice(error instanceof Error ? error.message : 'Authentication failed. Please try again.')
@@ -59,8 +74,15 @@ export function LoginScreen({ mode = 'login' }: { mode?: 'login' | 'signup' }) {
   }
 
   return (
-    <main id="main-content" className="flex flex-1 items-center justify-center px-4 py-12 sm:py-20">
-      <section aria-labelledby="login-title" className="w-full max-w-md rounded-3xl border border-line bg-surface/90 p-6 shadow-[0_18px_60px_rgba(88,70,49,0.08)] sm:p-10">
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="login-title"
+      className="auth-dialog"
+      onCancel={(event) => { event.preventDefault(); onClose() }}
+      onClick={(event) => { if (event.target === event.currentTarget) onClose() }}
+    >
+      <section aria-labelledby="login-title" className="auth-dialog-card">
+        <button type="button" onClick={onClose} aria-label="Close sign-in dialog" className="auth-dialog-close">×</button>
         <div className="mb-8 flex flex-col items-center text-center">
           <BrandMark />
           <p className="mt-4 text-xs font-medium uppercase tracking-[0.22em] text-muted">Moments, kept close</p>
@@ -98,9 +120,9 @@ export function LoginScreen({ mode = 'login' }: { mode?: 'login' | 'signup' }) {
 
         {!configured && <p role="status" className="mt-4 rounded-xl bg-canvas px-4 py-3 text-center text-sm text-muted">Authentication needs VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in core/frontend/.env.local. Restart the frontend after adding them.</p>}
         {notice && <p role="status" className="mt-4 rounded-xl bg-canvas px-4 py-3 text-center text-sm text-muted">{notice}</p>}
-        <p className="mt-6 text-center text-sm text-muted">{isSignup ? 'Already have an account?' : 'New here?'} <a href={isSignup ? '/login' : '/signup'} className="font-medium text-ink underline underline-offset-4">{isSignup ? 'Sign in' : 'Create an account'}</a></p>
+        <p className="mt-6 text-center text-sm text-muted">{isSignup ? 'Already have an account?' : 'New here?'} <button type="button" onClick={() => onSwitchMode(isSignup ? 'login' : 'signup')} className="font-medium text-ink underline underline-offset-4">{isSignup ? 'Sign in' : 'Create an account'}</button></p>
         <p className="mt-6 text-center text-xs leading-5 text-muted">Your photos stay in this browser during creation.</p>
       </section>
-    </main>
+    </dialog>
   )
 }

@@ -56,7 +56,7 @@ Do not put service credentials in client code. Public client configuration, if l
 
 ## Authentication boundary
 
-Supabase Auth is an optional identity layer. The current frontend supports email/password signup and sign-in plus Google OAuth. Signup metadata includes first name, last name, and username; account profile persistence and username uniqueness are not implemented. OAuth and email confirmation return to `/login`, then authenticated users continue to the local photo journey. The photo journey remains available without an account, and photos are not sent to Supabase.
+Supabase Auth is an optional identity layer. The current frontend supports email/password signup and sign-in plus Google OAuth. Signup metadata includes first name, last name, and username; account profile persistence and username uniqueness are not implemented. Sign-in and signup render in a modal over the app; OAuth and email confirmation return to `/login` to reopen that modal. The photo journey remains available without an account, and photos are not sent to Supabase.
 
 The frontend reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` from `core/frontend/.env.local`. Keep `.env.local` ignored and commit only `.env.example`. Configure the Supabase Site URL and allowed redirect URLs for each deployment, and configure Google's OAuth callback to the Supabase project's `/auth/v1/callback` endpoint. The Supabase publishable key is intended for browser use; a service-role key is not.
 

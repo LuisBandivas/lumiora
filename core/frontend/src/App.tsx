@@ -16,6 +16,12 @@ import { LoginScreen } from './features/auth/LoginScreen'
 import { StartPage } from './features/templates/StartPage'
 
 function App() {
+  const [authMode, setAuthMode] = useState<'login' | 'signup' | null>(() => {
+    const path = window.location.pathname
+    if (path !== '/login' && path !== '/signup') return null
+    window.history.replaceState(null, '', `/${window.location.search}`)
+    return path === '/signup' ? 'signup' : 'login'
+  })
   const [step, setStep] = useState<JourneyStep | 'home'>(() => window.location.pathname === '/create' ? 'select' : 'home')
   const selection = useTemplateSelection()
   const photos = usePhotoSession(selection.template)
@@ -23,7 +29,17 @@ function App() {
   const previousStep = useRef<JourneyStep | 'home'>('home')
 
   useEffect(() => {
-    const onPop = () => setStep(window.location.pathname === '/create' ? 'select' : 'home')
+    const onPop = () => {
+      const path = window.location.pathname
+      if (path === '/login' || path === '/signup') {
+        setAuthMode(path === '/signup' ? 'signup' : 'login')
+        window.history.replaceState(null, '', `/${window.location.search}`)
+        setStep('home')
+      } else {
+        setAuthMode(null)
+        setStep(path === '/create' ? 'select' : 'home')
+      }
+    }
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
   }, [])
@@ -44,16 +60,12 @@ function App() {
   const index = step === 'home' ? 0 : stepIndex(step)
   const go =(delta: number) => setStep(steps[index + delta].id)
 
-  if (window.location.pathname === '/login' || window.location.pathname === '/signup') {
-    const mode = window.location.pathname === '/signup' ? 'signup' : 'login'
-    return <MotionConfig reducedMotion="user"><div className="flex min-h-screen flex-col"><LoginScreen mode={mode} /></div></MotionConfig>
-  }
-
   return (
     <MotionConfig reducedMotion="user">
       <div className="flex min-h-screen flex-col">
         <AppHeader
           isHome={step === 'home'}
+          onLogin={() => setAuthMode('login')}
           onTemplates={() => {
             window.history.pushState(null, '', '/create')
             selection.selectCategory('photostrips')
@@ -132,6 +144,13 @@ function App() {
           </AnimatePresence>
         </main>
         <AppFooter />
+        {authMode && (
+          <LoginScreen
+            mode={authMode}
+            onClose={() => setAuthMode(null)}
+            onSwitchMode={setAuthMode}
+          />
+        )}
       </div>
     </MotionConfig>
   )

@@ -29,9 +29,10 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
   const remaining = template.photoCount - session.filled
 
   return (
-    <section aria-labelledby="capture-heading" className="flex flex-1 flex-col">
-      <div className="mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
-        <h1 id="capture-heading" className="text-3xl font-semibold tracking-tight sm:text-4xl">
+    <section aria-labelledby="capture-heading" className="journey-screen flex flex-1 flex-col">
+      <div className="journey-intro mx-auto w-full max-w-5xl px-4 pt-8 text-center sm:pt-12">
+        <p className="journey-eyebrow">✿ &nbsp; Your little photo booth</p>
+        <h1 id="capture-heading" className="text-3xl sm:text-4xl">
           Capture or upload
         </h1>
         <p className="mt-2 text-muted">
@@ -39,10 +40,10 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
         </p>
       </div>
 
-      <div className="mx-auto mt-8 grid w-full max-w-5xl flex-1 gap-8 px-4 lg:grid-cols-2 lg:items-start">
-        <div className="min-w-0">
-          <fieldset className="mb-4 flex justify-center gap-4" aria-describedby="timer-help">
-            <legend className="mb-2 w-full text-center text-sm font-medium">Capture timer</legend>
+      <div className="journey-capture-grid mx-auto mt-8 grid w-full max-w-5xl flex-1 gap-6 px-4 lg:grid-cols-2 lg:items-start">
+        <div className="journey-capture-card min-w-0">
+          <fieldset className="journey-timer mb-4 flex justify-center gap-4" aria-describedby="timer-help">
+            <legend className="mb-2 w-full text-center text-sm font-medium">A little countdown</legend>
             {([0, 3, 5] as const).map((seconds) => (
               <label key={seconds} className="flex items-center gap-2 text-sm">
                 <input type="radio" name="capture-timer" value={seconds} checked={session.timer === seconds}
@@ -53,7 +54,7 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
             <span id="timer-help" className="sr-only">{session.timerLocked ? 'Remove all camera photos to change the timer.' : 'One timer applies to all camera photos in this template.'}</span>
           </fieldset>
           {session.timerLocked && <p className="mb-3 text-center text-xs text-muted">Timer locked while this template has camera photos. Remove them to change it.</p>}
-          <div role="tablist" onKeyDown={navigateTabs} aria-label="Photo source" className="mb-4 flex justify-center gap-2">
+          <div role="tablist" onKeyDown={navigateTabs} aria-label="Photo source" className="journey-source-tabs mb-4 flex justify-center gap-2">
             {sources.map((s) => (
               <button
                 key={s.id}
@@ -66,8 +67,8 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
                 onClick={() => setSource(s.id)}
                 className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                   s.id === source
-                    ? 'border-ink bg-ink text-surface'
-                    : 'border-line bg-surface text-muted hover:text-ink'
+                    ? 'border-accent bg-accent text-accent-ink shadow-sm'
+                    : 'border-line bg-surface text-muted hover:border-champagne hover:text-ink'
                 }`}
               >
                 {s.label}
@@ -90,7 +91,7 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
           </div>
         </div>
 
-        <div className="flex min-w-0 flex-col items-center gap-3">
+        <div className="journey-preview-card flex min-w-0 flex-col items-center gap-3">
           <SlotStrip template={template} session={session} playing={playback.playing} onPlaybackFailure={playback.fail} />
           {session.hasMotion && (
             <button type="button" onClick={playback.toggle} className="rounded-full border border-line px-5 py-2 text-sm font-medium">
@@ -108,7 +109,7 @@ export function CaptureScreen({ template, session, onBack, onContinue }: Props) 
         Photos and clips stay in this browser tab and are lost if you refresh or close it.
       </p>
 
-      <div className="sticky bottom-0 mt-6 border-t border-line bg-canvas/90 px-4 py-4 backdrop-blur sm:static sm:border-0 sm:bg-transparent">
+      <div className="journey-action-bar sticky bottom-0 mt-6 border-t border-line bg-canvas/90 px-4 py-4 backdrop-blur sm:static sm:border-0 sm:bg-transparent">
         <div className="mx-auto flex max-w-sm flex-col gap-2">
           <motion.button
             type="button"

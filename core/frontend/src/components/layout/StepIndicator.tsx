@@ -31,7 +31,7 @@ export function StepIndicator({ current, onNavigate }: Props) {
                   aria-label={`${step.label}, ${active ? 'current step' : done ? 'completed' : 'upcoming'}`}
                   className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border px-1 py-2 text-left text-sm transition-colors min-[700px]:px-2 min-[700px]:text-xs lg:px-3 lg:text-sm ${
                     active
-                      ? 'border-accent/20 bg-accent/10 font-semibold text-accent'
+                      ? 'border-[#a96f66]/20 bg-[#a96f66]/10 font-semibold text-[#8f5f57]'
                       : done
                         ? 'border-transparent font-medium text-ink hover:bg-canvas'
                         : 'border-transparent text-muted'
@@ -41,7 +41,7 @@ export function StepIndicator({ current, onNavigate }: Props) {
                     aria-hidden="true"
                     className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-semibold ${
                       active
-                        ? 'bg-accent text-accent-ink'
+                        ? 'bg-[#a96f66] text-white'
                         : done
                           ? 'bg-accent/10 text-accent'
                           : 'bg-canvas text-muted ring-1 ring-inset ring-line'
@@ -57,7 +57,7 @@ export function StepIndicator({ current, onNavigate }: Props) {
         </ol>
         <div aria-hidden="true" className="mt-3 h-1 overflow-hidden rounded-full bg-line">
           <motion.div
-            className="h-full rounded-full bg-accent"
+            className="h-full rounded-full bg-[#a96f66]"
             initial={false}
             animate={{ width: `${((currentIndex + 1) / steps.length) * 100}%` }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
