@@ -4,9 +4,11 @@ import { BrandMark } from './BrandMark'
 
 interface Props {
   onHome: () => void
+  isHome?: boolean
+  onTemplates?: () => void
 }
 
-export function AppHeader({ onHome }: Props) {
+export function AppHeader({ onHome, isHome = false, onTemplates }: Props) {
   const { user, signOut } = useAuth()
   const [authNotice, setAuthNotice] = useState('')
 
@@ -24,15 +26,19 @@ export function AppHeader({ onHome }: Props) {
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-50 focus:rounded-full focus:bg-surface focus:px-4 focus:py-2">
         Skip to content
       </a>
-      <div className="mx-auto flex w-full max-w-3/4 items-center justify-between gap-4 px-4 py-3 sm:py-4">
+      <div className={`mx-auto flex w-full items-center justify-between gap-4 px-4 py-3 sm:py-4 ${isHome ? 'landing-nav' : ''}`}>
         <button type="button" onClick={onHome} aria-label="Ephemora, return to start" className="group flex min-w-0 items-center gap-3 rounded-xl text-left">
           <BrandMark />
           <span className="flex min-w-0 flex-col">
             <span className="font-editorial text-xl leading-tight group-hover:text-accent sm:text-2xl">Ephemora</span>
-            <span className="hidden text-[0.6rem] uppercase tracking-[0.2em] text-muted sm:inline">Moments, kept close</span>
           </span>
         </button>
+        {isHome && <nav aria-label="Main navigation" className="landing-nav-links">
+          <a href="#how-it-works">How it works</a>
+          <a href="#templates">Templates</a>
+        </nav>}
         <div className="flex shrink-0 items-center gap-2">
+          {isHome && onTemplates && <button type="button" onClick={onTemplates} className="landing-nav-cta">Get started <span aria-hidden="true">↗</span></button>}
           {user && <>
             <span className="hidden max-w-48 truncate text-xs text-muted sm:inline" title={user.email ?? undefined}>{user.email}</span>
             <button type="button" onClick={() => void handleSignOut()} className="rounded-full border border-line bg-canvas px-3 py-2 text-xs font-medium text-muted transition hover:text-ink">Sign out</button>

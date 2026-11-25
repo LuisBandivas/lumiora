@@ -12,3 +12,6 @@ One playable video of the complete chosen template, with its image slots arrange
 
 **Auth session**:
 The optional Supabase identity session for sign-in. It is separate from the temporary photo session, and it does not store or upload photos.
+
+**Sample composition**:
+A fixed illustrative photo arrangement shown to preview Ephemora's templates. It is separate from a person's temporary photo session and is not their personal content.

@@ -52,10 +52,18 @@ function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="flex min-h-screen flex-col">
-        <AppHeader onHome={() => {
-          window.history.pushState(null, '', '/')
-          setStep('home')
-        }} />
+        <AppHeader
+          isHome={step === 'home'}
+          onTemplates={() => {
+            window.history.pushState(null, '', '/create')
+            selection.selectCategory('photostrips')
+            setStep('select')
+          }}
+          onHome={() => {
+            window.history.pushState(null, '', '/')
+            setStep('home')
+          }}
+        />
         {step !== 'home' && <StepIndicator current={step} onNavigate={setStep} />}
         {/* overflow-x-clip, not hidden: hidden makes main a scroll container and breaks sticky bars. */}
         <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col overflow-x-clip">

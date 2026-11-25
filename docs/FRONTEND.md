@@ -8,9 +8,9 @@ The app lives in `core/frontend`. `package.json` provides `dev`, `build`, `lint`
 
 ### UI shell (implemented)
 
-The shell follows the [UI](UI.md) journey. The root path (`/`) opens a landing page with template and blank-layout entry points. Choosing either opens `/create` and the five-step journey; `/create` restores valid category and template query parameters. No router is installed.
+The shell follows the [UI](UI.md) journey. The root path (`/`) opens a four-section landing page with a hero, how-it-works steps, template showcase, and closing CTA. The hero and top navigation offer template entry; the hero also offers a blank-layout entry. The showcase cycles through three illustrative sample compositions using keyboard-accessible controls. Choosing either entry opens `/create` and the five-step journey; `/create` restores valid category and template query parameters. No router is installed.
 
-- `src/App.tsx` holds the landing state and journey step (`home`, `select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes. `features/templates/StartPage.tsx` is the root landing page and offers template browsing or blank-layout entry.
+- `src/App.tsx` holds the landing state and journey step (`home`, `select`, `source`, `customize`, `review`, `export`) in React state and owns the template selection hook, so the choice survives step changes. `features/templates/StartPage.tsx` renders the landing sections and interactive sample-composition selector. `components/layout/AppHeader.tsx` shows landing-specific section links and the top-bar CTA on `/`.
 - `src/app/journey.ts` defines the five steps. `components/layout/` holds `AppHeader`, `StepIndicator` (earlier steps are clickable, later ones disabled) and `AppFooter`.
 - `features/templates/` holds:
   - `catalog.ts`, the 18-template first-release catalog (see [Features](FEATURES.md#first-release-template-catalog)). Each template has its photo count, columns, a layout, a derived export aspect ratio and default frame and filter IDs.
